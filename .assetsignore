@@ -1,0 +1,11 @@
+auth-worker.mjs
+wrangler.json
+secrets
+accounts*.json
+.git
+node_modules
+.wrangler
+.dev.vars*
+.env*
+scripts
+tests

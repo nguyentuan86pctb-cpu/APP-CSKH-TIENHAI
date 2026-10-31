@@ -1,0 +1,9 @@
+{
+  "name": "app-cskh-tienhai",
+  "compatibility_date": "2026-10-24",
+  "assets": {
+    "directory": ".",
+    "run_worker_first": false
+  },
+  "preview_urls": false
+}

@@ -1,0 +1,2792 @@
+<!DOCTYPE html>
+<html lang="vi" class="light">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0"/>
+  <meta name="theme-color" content="#00429d"/>
+  <title>EVN CSKH Trạm - Tiến độ cài App CSKH (Điện lực Tiền Hải)</title>
+  <link rel="manifest" href="/manifest.json"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-low": "#f0f3ff",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-highest": "#d8e3fb",
+            "surface-container-high": "#dee8ff",
+            "surface-container": "#e7eeff",
+            "surface": "#f9f9ff",
+            "primary": "#00429d",
+            "primary-container": "#0a58ca",
+            "on-primary": "#ffffff",
+            "secondary-container": "#fe6b00",
+            "tertiary": "#005230",
+            "tertiary-container": "#006d41",
+            "tertiary-fixed": "#93f7ba",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "on-error-container": "#93000a",
+            "outline": "#737785",
+            "outline-variant": "#c3c6d6",
+            "on-surface": "#111c2d",
+            "on-surface-variant": "#424653"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-fill {
+      font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      -webkit-tap-highlight-color: transparent;
+    }
+    .num { font-variant-numeric: tabular-nums; }
+    /* Tối ưu thanh cuộn */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f0f3ff;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #c3c6d6;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #737785;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-sans antialiased pb-20 md:pb-3 min-h-screen">
+
+  <!-- ================= TOP APP BAR (HEADER) ================= -->
+  <!-- Tự động thích ứng: Trên mobile là app bar 60px, trên desktop là header thanh lịch 68px tích hợp menu điều hướng ngang -->
+  <header class="fixed top-0 left-0 w-full z-40 h-16 md:h-[68px] bg-surface-container-lowest/95 backdrop-blur-md border-b border-outline-variant shadow-xs flex justify-between items-center px-3 sm:px-6 lg:px-8 transition-all">
+    
+    <!-- Logo & Trạm điện hiện tại -->
+    <div class="flex items-center space-x-2.5 sm:space-x-3 min-w-0">
+      <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-xs">
+        <span class="material-symbols-outlined material-symbols-fill text-[22px] sm:text-[24px]">electric_meter</span>
+      </div>
+      <div class="min-w-0">
+        <div id="btn-select-station" onclick="openStationModal()" class="flex items-center space-x-1 cursor-pointer active:scale-95 transition-transform group" title="Bấm để đổi trạm điện">
+          <h1 class="text-base sm:text-lg font-extrabold text-primary tracking-tight truncate group-hover:text-primary-container">EVN CSKH Trạm</h1>
+          <span class="material-symbols-outlined text-outline text-[20px] group-hover:text-primary transition-colors">arrow_drop_down</span>
+        </div>
+        <div class="flex items-center space-x-1.5 cursor-pointer" onclick="openStationModal()">
+          <span class="w-2 h-2 rounded-full bg-tertiary-container animate-pulse shrink-0"></span>
+          <span id="current-station-name" class="text-xs sm:text-sm text-on-surface-variant font-semibold hover:underline truncate max-w-[180px] sm:max-w-xs md:max-w-sm">Đang tải trạm...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESKTOP TOP NAVIGATION BAR (Chỉ hiển thị trên máy tính md: & lg:, thay thế hoàn toàn bottom bar) -->
+    <nav class="hidden md:flex items-center space-x-1 lg:space-x-2 bg-surface-container-low/70 p-1 rounded-2xl border border-outline-variant/50">
+      <button data-desktop-nav="customers" onclick="switchNav('customers')" class="desktop-nav-item px-3.5 lg:px-4 py-2 rounded-xl text-sm font-bold flex items-center space-x-1.5 transition-all text-primary bg-surface-container-lowest shadow-xs">
+        <span class="material-symbols-outlined text-[20px] material-symbols-fill">call</span>
+        <span>Khách hàng</span>
+      </button>
+      <button data-desktop-nav="stations" onclick="switchNav('stations')" class="desktop-nav-item px-3.5 lg:px-4 py-2 rounded-xl text-sm font-semibold flex items-center space-x-1.5 transition-all text-outline hover:text-primary hover:bg-surface-container-lowest/60">
+        <span class="material-symbols-outlined text-[20px]">analytics</span>
+        <span>Tiến độ trạm</span>
+      </button>
+      <button data-desktop-nav="call-logs" onclick="switchNav('call-logs')" class="desktop-nav-item px-3.5 lg:px-4 py-2 rounded-xl text-sm font-semibold flex items-center space-x-1.5 transition-all text-outline hover:text-primary hover:bg-surface-container-lowest/60 relative">
+        <span class="material-symbols-outlined text-[20px]">phone_in_talk</span>
+        <span>Đã gọi</span>
+        <span id="desktop-nav-badge-contacted" class="hidden ml-1 bg-error text-white text-[11px] font-bold px-1.5 py-0.2 rounded-full leading-none">0</span>
+      </button>
+      <button data-desktop-nav="reports" onclick="switchNav('reports')" class="desktop-nav-item px-3.5 lg:px-4 py-2 rounded-xl text-sm font-semibold flex items-center space-x-1.5 transition-all text-outline hover:text-primary hover:bg-surface-container-lowest/60">
+        <span class="material-symbols-outlined text-[20px]">badge</span>
+        <span>Báo cáo</span>
+      </button>
+    </nav>
+
+    <!-- Right Quick Actions: Sync + Avatar -->
+    <div class="flex items-center space-x-1.5 sm:space-x-2">
+      <div id="top-sync-badge" class="hidden lg:flex items-center space-x-1.5 bg-surface-container-low px-3 py-1.5 rounded-full text-xs font-mono text-outline border border-outline-variant/40" title="Thời gian cập nhật dữ liệu">
+        <span class="w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></span>
+        <span>Cập nhật: <strong id="top-sync-time" class="text-primary font-bold">--</strong></span>
+      </div>
+      <button id="btn-sync" class="w-10 h-10 rounded-xl flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low active:scale-95 transition-all border border-transparent hover:border-outline-variant" title="Làm mới dữ liệu">
+        <span class="material-symbols-outlined text-[22px]">sync</span>
+      </button>
+      <div id="btn-user-avatar" onclick="handleUserAvatarClick()" class="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center text-sm font-bold border border-primary/20 cursor-pointer active:scale-95 shadow-xs transition-all" title="Tài khoản cán bộ">
+        <span id="user-avatar-initials">ĐN</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <!-- Trên Mobile: Bố cục 1 cột cuộn mượt. Trên Desktop: Mở rộng max-w-7xl, bố cục 2 cột chuyên nghiệp -->
+  <main class="pt-20 md:pt-24 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-5">
+
+    <!-- PAGE VIEW 1: KHÁCH HÀNG & GỌI ĐIỆN (PHƯƠNG ÁN B) -->
+    <div id="view-customers">
+
+      <!-- BỐ CỤC CHÍNH 2 CỘT TRÊN MÁY TÍNH (lg:grid lg:grid-cols-12 lg:gap-6 lg:items-start) -->
+      <div class="lg:grid lg:grid-cols-12 lg:gap-6 lg:items-start space-y-4 lg:space-y-0">
+
+        <!-- ===== CỘT TRÁI (DESKTOP SIDEBAR - lg:col-span-4 / MOBILE: XẾP TRÊN CÙNG) ===== -->
+        <div class="lg:col-span-4 space-y-3.5 lg:sticky lg:top-24">
+          
+          <!-- 0. CHỌN TRẠM ĐIỆN NHANH (Hiển thị rõ trạm hiện tại & 1 chạm đổi trạm) -->
+          <div id="btn-quick-station-card" onclick="openStationModal()" class="bg-surface-container-low border border-primary/20 hover:border-primary rounded-2xl p-3 sm:p-3.5 flex items-center justify-between cursor-pointer active:scale-[0.99] transition-all shadow-xs group">
+            <div class="flex items-center space-x-2.5 sm:space-x-3 min-w-0">
+              <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-[22px] sm:text-[24px]">electrical_services</span>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center space-x-1.5 flex-wrap">
+                  <span class="text-[11px] sm:text-xs text-outline font-bold uppercase tracking-wider">Trạm đang xem</span>
+                  <span class="text-outline text-xs">·</span>
+                  <span id="station-badge-uninstalled" class="text-xs font-bold text-secondary-container">... chưa cài</span>
+                </div>
+                <p id="card-station-name" class="text-base sm:text-lg font-bold text-primary truncate leading-tight mt-0.5">Đang tải trạm...</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-1 bg-surface-container-lowest px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-outline-variant text-primary font-bold text-xs sm:text-sm shrink-0 shadow-xs group-hover:bg-primary group-hover:text-on-primary transition-all">
+              <span class="material-symbols-outlined text-[18px]">swap_horiz</span>
+              <span>Đổi trạm</span>
+            </div>
+          </div>
+
+          <!-- MINI MOBILE PROGRESS BAR (CHỈ HIỆN TRÊN MOBILE: GỌN GÀNG, BẬT/TẮT CHI TIẾT THỐNG KÊ 1 CHẠM) -->
+          <div class="block lg:hidden bg-surface-container-lowest rounded-2xl p-3.5 border border-outline-variant shadow-xs">
+            <div class="flex items-center justify-between text-xs font-bold mb-2 cursor-pointer" onclick="toggleMobileStatsAccordion()">
+              <div class="flex items-center space-x-1.5 text-primary">
+                <span class="material-symbols-outlined text-[18px]">analytics</span>
+                <span>Tiến độ cài App trạm</span>
+              </div>
+              <div class="flex items-center space-x-1.5">
+                <span id="mobile-progress-percent" class="font-mono text-primary font-extrabold text-sm">0%</span>
+                <span id="mobile-stats-arrow" class="material-symbols-outlined text-[20px] text-outline transition-transform duration-200">expand_more</span>
+              </div>
+            </div>
+            <div class="w-full bg-surface-container-high h-2.5 rounded-full overflow-hidden cursor-pointer" onclick="toggleMobileStatsAccordion()">
+              <div id="mobile-progress-bar" class="bg-primary-container h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <div class="flex items-center justify-between text-[11px] sm:text-xs text-outline mt-2 pt-1 border-t border-outline-variant/30">
+              <span id="mobile-stats-summary" class="font-medium text-on-surface-variant">0 đã cài / 0 chưa cài</span>
+              <button type="button" onclick="toggleMobileStatsAccordion()" class="text-primary font-bold hover:underline flex items-center space-x-0.5">
+                <span id="mobile-stats-btn-text">Chi tiết & Gom nhóm</span>
+                <span class="material-symbols-outlined text-[15px]">tune</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- CHI TIẾT THỐNG KÊ & SWITCH GOM NHÓM: TRÊN DESKTOP LUÔN HIỆN, TRÊN MOBILE THU GỌN MẶC ĐỊNH ĐỂ ƯU TIÊN DANH SÁCH -->
+          <div id="stats-collapsible-wrapper" class="hidden lg:block space-y-4">
+
+            <!-- 2. HERO PROGRESS CARD (Ring Gauge + Thống kê trạm) -->
+            <section class="bg-surface-container-lowest rounded-2xl p-4 sm:p-5 border border-outline-variant shadow-sm relative overflow-hidden">
+              <div class="flex items-center justify-between">
+                <!-- Circular Ring Gauge -->
+                <div class="flex flex-col items-center justify-center pr-4 border-r border-outline-variant/60 min-w-[110px]">
+                  <div class="relative w-22 h-22 sm:w-24 sm:h-24 flex items-center justify-center">
+                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                      <path class="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+                      <path id="ring-gauge" class="text-primary-container transition-all duration-700" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="0, 100" stroke-linecap="round" stroke-width="3.6"></path>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                      <span id="progress-percent" class="text-2xl sm:text-3xl font-extrabold text-primary leading-none tracking-tight">0%</span>
+                      <span class="text-[10px] sm:text-xs font-bold text-outline uppercase tracking-wider mt-0.5">Tiến độ</span>
+                    </div>
+                  </div>
+                  <div id="badge-target" class="mt-2 inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-tertiary text-xs font-bold">
+                    <span class="material-symbols-outlined text-[14px] material-symbols-fill">check_circle</span>
+                    <span id="badge-target-text">Tiến độ trạm</span>
+                  </div>
+                </div>
+
+                <!-- 3 Stats metrics (To rõ, dễ nhìn) -->
+                <div class="flex-1 pl-4 space-y-2.5">
+                  <div class="grid grid-cols-2 gap-2 text-left">
+                    <div>
+                      <p class="text-xs text-outline font-medium">Tổng trạm</p>
+                      <p id="stat-total" class="text-lg sm:text-xl text-on-surface font-extrabold num">0 <span class="text-xs font-normal text-on-surface-variant">hộ</span></p>
+                    </div>
+                    <div>
+                      <p class="text-xs text-outline font-medium">Đã cài app</p>
+                      <p id="stat-installed" class="text-lg sm:text-xl text-tertiary font-extrabold num">0 <span id="stat-installed-sub" class="text-xs font-semibold text-tertiary">(0%)</span></p>
+                    </div>
+                  </div>
+                  <div class="pt-2 border-t border-outline-variant/40 flex items-center justify-between">
+                    <div>
+                      <p class="text-xs text-outline font-medium">Còn cần gọi</p>
+                      <p id="stat-uninstalled" class="text-base sm:text-lg text-secondary-container font-extrabold num">0 <span class="text-xs font-normal text-on-surface-variant">KH</span></p>
+                    </div>
+                    <div class="text-right">
+                      <span class="inline-flex items-center space-x-1 bg-surface-container-low text-primary px-2.5 py-1 rounded-xl border border-primary/20 shadow-xs">
+                        <span class="material-symbols-outlined text-[16px]">call_split</span>
+                        <span id="stat-savings" class="text-xs sm:text-sm font-bold">Tiết kiệm 0 cuộc</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- 3. CHẾ ĐỘ GOM NHÓM CHUNG SĐT (Smart Grouping Switch) -->
+            <section class="space-y-2.5">
+              <div class="bg-surface-container-low border border-surface-container-high rounded-2xl p-3.5 flex items-center justify-between shadow-xs">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-xs">
+                    <span class="material-symbols-outlined text-[22px]">join_inner</span>
+                  </div>
+                  <div>
+                    <div class="flex items-center space-x-2">
+                      <span class="text-sm sm:text-base font-bold text-on-surface">Gom nhóm chung SĐT</span>
+                      <span id="badge-toggle-status" class="bg-primary text-on-primary text-xs font-bold px-2 py-0.5 rounded-full">BẬT</span>
+                    </div>
+                    <p id="grouping-summary-text" class="text-xs text-on-surface-variant leading-tight mt-0.5">
+                      Gộp các mã trùng số thành <strong class="text-primary font-bold">đầu số gọi duy nhất</strong>
+                    </p>
+                  </div>
+                </div>
+                <!-- Custom Switch Toggle To Bản, Dễ Chạm -->
+                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                  <input id="toggle-group-phone" type="checkbox" checked class="sr-only peer"/>
+                  <div class="w-13 h-7 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[3px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-container"></div>
+                </label>
+              </div>
+            </section>
+
+            <!-- SYNC STATUS BANNER (Thông tin cập nhật) -->
+            <div id="sync-banner-customers" class="bg-surface-container-low/70 border border-outline-variant/40 rounded-xl px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-1.5 text-xs text-on-surface-variant shadow-xs">
+              <div class="flex items-center space-x-1.5 min-w-0">
+                <span class="w-2 h-2 rounded-full bg-tertiary-container animate-pulse shrink-0"></span>
+                <span class="text-outline text-xs font-semibold">Bản dữ liệu:</span>
+                <strong id="time-sync-customers" class="font-mono text-primary font-bold text-xs">Đang tải...</strong>
+              </div>
+              <div class="flex items-center space-x-2 text-xs font-mono text-outline shrink-0">
+                <span>CMIS: <strong id="cmis-time-customers" class="text-on-surface font-semibold">--</strong></span>
+                <span>·</span>
+                <span>CMS: <strong id="cms-time-customers" class="text-on-surface font-semibold">--</strong></span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ===== CỘT PHẢI (MAIN WORKSPACE - lg:col-span-8) ===== -->
+        <div class="lg:col-span-8 space-y-4">
+
+          <!-- 1. TÌM KIẾM & BỘ LỌC CHÍNH (Được làm to bản, dễ gõ trên điện thoại, sang trọng trên máy tính) -->
+          <section class="space-y-3">
+            <!-- Ô TÌM KIẾM CAO 56PX (H-14), FONT 16PX (TEXT-BASE) CHỐNG AUTO ZOOM IPHONE -->
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-4 text-outline text-[24px]">search</span>
+              <input id="input-search" class="w-full h-14 pl-12 pr-12 bg-surface-container-lowest border border-outline-variant rounded-2xl text-base placeholder-outline focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-xs transition-all font-medium" placeholder="Tìm tên chủ hộ, mã KH (PA09...), SĐT, số cột, công tơ..." type="text"/>
+              <button id="btn-clear-search" class="hidden absolute right-3 w-9 h-9 rounded-xl items-center justify-center text-outline hover:text-on-surface hover:bg-surface-container-low transition-all">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <!-- PHẠM VI TÌM KIẾM: TRẠM ĐANG XEM HOẶC TOÀN BỘ 707 TRẠM -->
+            <div class="flex items-center justify-between text-xs sm:text-sm px-1 pt-0.5">
+              <div class="flex items-center space-x-2">
+                <span class="text-outline font-semibold">Phạm vi tìm:</span>
+                <div class="inline-flex p-0.5 bg-surface-container-high rounded-xl border border-outline-variant/40 shadow-inner">
+                  <button id="btn-scope-current" type="button" onclick="setSearchScope('current')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-primary-container text-on-primary shadow-xs transition-all cursor-pointer">
+                    Trạm đang xem
+                  </button>
+                  <button id="btn-scope-all" type="button" onclick="setSearchScope('all')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-on-surface-variant hover:text-primary transition-all cursor-pointer">
+                    Toàn bộ 707 trạm
+                  </button>
+                </div>
+              </div>
+              <span id="search-scope-hint" class="text-xs text-outline font-medium hidden sm:inline">Đang tìm trong trạm được chọn</span>
+            </div>
+
+            <!-- SEGMENTED CONTROL BAR (3 TABS: Chưa cài / Đã cài / Tất cả) -->
+            <div class="bg-surface-container-high p-1.5 rounded-2xl flex items-center justify-between text-center select-none shadow-inner">
+              <button data-status="uninstalled" class="tab-status flex-1 h-11 py-2 px-2 rounded-xl bg-primary-container text-on-primary font-bold text-sm sm:text-base shadow-sm flex items-center justify-center space-x-1.5 transition-all cursor-pointer">
+                <span>Chưa cài</span>
+                <span id="tab-badge-uninstalled" class="bg-secondary-container text-on-primary text-xs font-extrabold px-2 py-0.5 rounded-full leading-none">...</span>
+              </button>
+              <button data-status="installed" class="tab-status flex-1 h-11 py-2 px-2 rounded-xl text-on-surface-variant font-semibold text-sm sm:text-base hover:text-primary transition-all flex items-center justify-center space-x-1.5 cursor-pointer">
+                <span>Đã cài</span>
+                <span id="tab-badge-installed" class="text-outline text-xs sm:text-sm font-bold">(...)</span>
+              </button>
+              <button data-status="all" class="tab-status flex-1 h-11 py-2 px-2 rounded-xl text-on-surface-variant font-semibold text-sm sm:text-base hover:text-primary transition-all flex items-center justify-center space-x-1.5 cursor-pointer">
+                <span>Tất cả</span>
+                <span id="tab-badge-all" class="text-outline text-xs sm:text-sm font-bold">(...)</span>
+              </button>
+            </div>
+
+            <!-- HÀNG CHIP LỌC CUỘC GỌI: ĐẶT NGAY DƯỚI SEGMENTED TABS, THAO TÁC CỰC THUẬN TIỆN TRÊN ĐIỆN THOẠI -->
+            <div class="flex items-center space-x-2 overflow-x-auto pb-1 text-nowrap scrollbar-none pt-0.5">
+              <span class="text-xs text-outline font-semibold shrink-0">Cuộc gọi:</span>
+              <button id="chip-filter-uncontacted" class="sub-chip h-8.5 px-3 rounded-full bg-primary text-on-primary border border-primary text-xs sm:text-sm font-semibold flex items-center space-x-1 shadow-xs cursor-pointer transition-all">
+                <span class="material-symbols-outlined text-[15px]">call</span>
+                <span>Chưa gọi</span>
+                <span id="badge-chip-uncontacted" class="ml-1 px-1.5 py-0.2 rounded-full text-xs font-bold bg-white/20 text-white">...</span>
+              </button>
+              <button id="chip-filter-contacted" class="sub-chip h-8.5 px-3 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant text-xs sm:text-sm font-medium flex items-center space-x-1 hover:bg-surface-container-low cursor-pointer transition-all">
+                <span class="material-symbols-outlined text-[15px] text-tertiary">check_circle</span>
+                <span>Đã gọi</span>
+                <span id="badge-chip-contacted" class="ml-1 px-1.5 py-0.2 rounded-full text-xs font-bold bg-surface-container text-outline">...</span>
+              </button>
+              <button id="chip-filter-all" class="sub-chip h-8.5 px-3 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant text-xs sm:text-sm font-medium flex items-center space-x-1 hover:bg-surface-container-low cursor-pointer transition-all">
+                <span class="material-symbols-outlined text-[15px]">phone_in_talk</span>
+                <span>Tất cả cuộc gọi</span>
+                <span id="badge-chip-all" class="ml-1 px-1.5 py-0.2 rounded-full text-xs font-bold bg-surface-container text-outline">...</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- 4. DANH SÁCH THẺ GỌI ĐIỆN -->
+          <section class="space-y-3.5">
+            <div class="flex items-center justify-between px-1">
+              <h2 class="text-xs sm:text-sm font-bold text-outline uppercase tracking-wider flex items-center space-x-1.5">
+                <span class="material-symbols-outlined text-[18px]">format_list_bulleted</span>
+                <span id="heading-customer-text">Danh sách khách hàng ưu tiên (Chưa gọi)</span>
+              </h2>
+              <span id="label-total-count" class="text-xs sm:text-sm text-primary font-bold num bg-surface-container-low px-2.5 py-1 rounded-lg border border-primary/20">0 đầu mối</span>
+            </div>
+
+            <!-- Cards Container -->
+            <div id="cards-container" class="space-y-4">
+              <div class="py-16 text-center text-outline text-base">
+                <span class="material-symbols-outlined text-5xl animate-spin text-primary mb-3">progress_activity</span>
+                <p class="font-semibold">Đang tải danh sách khách hàng...</p>
+              </div>
+            </div>
+
+            <!-- Pagination Bar (Hiện đại, chọn số lượng dòng & sang trang dễ dàng) -->
+            <div id="pagination-container" class="hidden flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 pb-2 border-t border-outline-variant/60">
+              <div class="flex items-center space-x-2 text-xs sm:text-sm">
+                <span id="pagination-info" class="text-outline font-medium">Hiển thị 1 - 30 đầu số</span>
+                <span class="text-outline/40">|</span>
+                <div class="flex items-center space-x-1.5">
+                  <span class="text-outline">Mỗi trang:</span>
+                  <select id="select-page-size" class="h-9 px-2.5 bg-surface-container-lowest border border-outline-variant rounded-xl text-xs sm:text-sm font-bold text-primary focus:outline-none focus:ring-2 focus:ring-primary shadow-xs">
+                    <option value="30">30 số</option>
+                    <option value="50">50 số</option>
+                    <option value="100">100 số</option>
+                    <option value="500">Tất cả</option>
+                  </select>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2">
+                <button id="btn-prev-page" class="h-10 px-4 rounded-xl border border-outline-variant bg-surface-container-lowest text-xs sm:text-sm font-bold text-primary hover:bg-surface-container-low active:scale-95 disabled:opacity-30 disabled:pointer-events-none flex items-center space-x-1 transition-all shadow-xs cursor-pointer">
+                  <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                  <span>Trước</span>
+                </button>
+                <span id="page-indicator" class="text-xs sm:text-sm text-on-surface font-bold num px-3 py-2 bg-surface-container-low rounded-xl">Trang 1 / 1</span>
+                <button id="btn-next-page" class="h-10 px-4 rounded-xl border border-outline-variant bg-surface-container-lowest text-xs sm:text-sm font-bold text-primary hover:bg-surface-container-low active:scale-95 disabled:opacity-30 disabled:pointer-events-none flex items-center space-x-1 transition-all shadow-xs cursor-pointer">
+                  <span>Sau</span>
+                  <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- PAGE VIEW 2: TIẾN ĐỘ THEO TRẠM (Tối ưu dạng Grid trên máy tính) -->
+    <div id="view-stations" class="hidden space-y-4">
+      <!-- SYNC STATUS BANNER ON TAB 2 -->
+      <div id="sync-banner-stations" class="bg-surface-container-low/70 border border-outline-variant/40 rounded-2xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-1.5 text-xs sm:text-sm text-on-surface-variant shadow-xs">
+        <div class="flex items-center space-x-2 min-w-0">
+          <span class="w-2.5 h-2.5 rounded-full bg-tertiary-container animate-pulse shrink-0"></span>
+          <span class="text-outline font-semibold">Số liệu 707 trạm cập nhật lúc:</span>
+          <strong id="time-sync-stations" class="font-mono text-primary font-bold">Đang tải...</strong>
+        </div>
+        <div class="font-mono text-outline shrink-0">
+          CMIS: <strong id="cmis-time-stations" class="text-on-surface font-semibold">--</strong>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg sm:text-xl font-extrabold text-primary">Tiến độ 707 Trạm Điện</h2>
+          <p id="stations-count-subtitle" class="text-xs sm:text-sm text-outline mt-0.5">Gõ vài ký tự để lọc nhanh trong danh sách trạm</p>
+        </div>
+        <span id="stations-count-badge" class="text-xs sm:text-sm bg-surface-container-low px-3 py-1.5 rounded-xl text-primary font-bold border border-primary/20 shrink-0">707 trạm</span>
+      </div>
+
+      <!-- Search & Sort Box in View Stations -->
+      <div class="space-y-3 bg-surface-container-lowest p-3.5 sm:p-4 rounded-2xl border border-outline-variant shadow-xs">
+        <div class="relative flex items-center">
+          <span class="material-symbols-outlined absolute left-3.5 text-outline text-[20px]">search</span>
+          <input id="input-station-search" class="w-full h-12 pl-11 pr-10 bg-surface-container-lowest border border-outline-variant rounded-xl text-sm sm:text-base placeholder-outline focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-xs transition-all font-medium" placeholder="Gõ vài ký tự để tìm (vd: nam hai, tay tien, 0300...)..."/>
+          <button id="btn-clear-station-search" class="hidden absolute right-3 w-7 h-7 flex items-center justify-center text-outline hover:text-on-surface">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        </div>
+
+        <!-- Sort Bar for Tab 2 -->
+        <div class="flex items-center space-x-2 overflow-x-auto pb-0.5 text-nowrap text-xs sm:text-sm scrollbar-none">
+          <span class="text-outline text-xs font-semibold shrink-0">Sắp xếp:</span>
+          <button data-sort-station="name-asc" class="station-sort-btn px-3 py-1.5 rounded-xl border border-primary bg-primary text-on-primary font-bold shadow-xs transition-all cursor-pointer">
+            <span>Tên A-Z</span>
+          </button>
+          <button data-sort-station="rate-asc" class="station-sort-btn px-3 py-1.5 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-medium hover:bg-surface-container-low transition-all cursor-pointer">
+            <span>% Thấp ↗ (Làm gấp)</span>
+          </button>
+          <button data-sort-station="rate-desc" class="station-sort-btn px-3 py-1.5 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-medium hover:bg-surface-container-low transition-all cursor-pointer">
+            <span>% Cao ↘</span>
+          </button>
+          <button data-sort-station="uninstalled-desc" class="station-sort-btn px-3 py-1.5 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-medium hover:bg-surface-container-low transition-all cursor-pointer">
+            <span>Chưa cài nhiều nhất</span>
+          </button>
+          <button data-sort-station="code-asc" class="station-sort-btn px-3 py-1.5 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-medium hover:bg-surface-container-low transition-all cursor-pointer">
+            <span>Mã trạm</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Stations List Container: Trên Mobile xếp 1 cột, trên Desktop tự động chia 2 hoặc 3 cột cực rộng rãi -->
+      <div id="stations-list-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 max-h-[75vh] md:max-h-[80vh] overflow-y-auto pr-1">
+        <!-- Render stations here -->
+      </div>
+    </div>
+
+    <!-- PAGE VIEW 3: CUỘC GỌI ĐÃ ĐÁNH DẤU CỦA CÁN BỘ -->
+    <div id="view-call-logs" class="hidden space-y-4">
+      <!-- SYNC STATUS BANNER ON TAB 3 -->
+      <div id="sync-banner-calls" class="bg-surface-container-low/70 border border-outline-variant/40 rounded-2xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-1.5 text-xs sm:text-sm text-on-surface-variant shadow-xs">
+        <div class="flex items-center space-x-2 min-w-0">
+          <span class="w-2.5 h-2.5 rounded-full bg-tertiary animate-pulse shrink-0"></span>
+          <span class="text-outline font-semibold">Cán bộ:</span>
+          <strong id="time-sync-calls" class="font-mono text-primary font-bold">Cá nhân</strong>
+        </div>
+        <div class="font-mono text-outline shrink-0">Lưu riêng theo từng tài khoản</div>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg sm:text-xl font-extrabold text-primary">Danh sách đã liên hệ</h2>
+          <p class="text-xs sm:text-sm text-outline mt-0.5">Các số điện thoại bạn đã liên hệ thành công. Tích chọn để quản lý hoặc gọi lại.</p>
+        </div>
+        <button id="btn-clear-call-logs" class="text-xs sm:text-sm text-error hover:underline font-bold px-3 py-1.5 rounded-xl border border-error/30 hover:bg-error-container/20 transition-all cursor-pointer">Xóa danh sách của tôi</button>
+      </div>
+
+      <!-- Call Logs Container (Trên desktop chia 2 cột) -->
+      <div id="call-logs-container" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <!-- Render contacted logs -->
+      </div>
+    </div>
+
+    <!-- PAGE VIEW 4: BÁO CÁO TOÀN ĐƠN VỊ -->
+    <div id="view-reports" class="hidden space-y-4">
+      <div class="bg-surface-container-lowest rounded-2xl p-5 sm:p-6 border border-outline-variant shadow-sm space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/50 pb-3">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-primary">Báo cáo Tổng thể Đơn vị</h2>
+            <p class="text-xs sm:text-sm text-outline mt-0.5">Điện lực Tiền Hải (PA0903) · Dữ liệu đối soát CMIS gốc</p>
+          </div>
+          <div class="bg-surface-container-low px-3 py-1.5 rounded-xl border border-outline-variant/40 text-xs sm:text-sm font-mono text-outline">
+            Cập nhật: <strong id="time-sync-reports" class="text-primary font-bold">--</strong>
+          </div>
+        </div>
+        <div class="text-xs sm:text-sm text-outline font-mono flex items-center space-x-3 pt-0.5">
+          <span>CMIS: <strong id="cmis-time-reports" class="text-on-surface font-semibold">--</strong></span>
+          <span>·</span>
+          <span>CMS: <strong id="cms-time-reports" class="text-on-surface font-semibold">--</strong></span>
+        </div>
+
+        <!-- 4 Stat Cards: Trên Mobile 2 cột, Trên Desktop 4 cột dàn ngang tuyệt đẹp -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 pt-2">
+          <div class="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30">
+            <span class="text-xs sm:text-sm text-outline font-medium">Tổng điểm đo CMIS</span>
+            <p id="rep-total" class="text-2xl sm:text-3xl font-extrabold text-on-surface num mt-1">0</p>
+          </div>
+          <div class="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30">
+            <span class="text-xs sm:text-sm text-outline font-medium">Đã cài App CSKH</span>
+            <p id="rep-installed" class="text-2xl sm:text-3xl font-extrabold text-tertiary num mt-1">0</p>
+          </div>
+          <div class="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30">
+            <span class="text-xs sm:text-sm text-outline font-medium">Chưa cài App</span>
+            <p id="rep-uninstalled" class="text-2xl sm:text-3xl font-extrabold text-secondary-container num mt-1">0</p>
+          </div>
+          <div class="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30">
+            <span class="text-xs sm:text-sm text-outline font-medium">Tỷ lệ hoàn thành</span>
+            <p id="rep-rate" class="text-2xl sm:text-3xl font-extrabold text-primary num mt-1">0%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER SECURITY NOTICE -->
+    <footer class="pt-2 pb-2 text-center text-outline/70 text-[11px] sm:text-xs flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5">
+      <span class="inline-flex items-center space-x-1 font-semibold text-outline/90">
+        <span class="material-symbols-outlined text-[15px]">verified_user</span>
+        <span>EVN Tiền Hải</span>
+      </span>
+      <span class="hidden sm:inline text-outline/40">•</span>
+      <span>Dữ liệu nội bộ CSKH, không sao chép chia sẻ ngoài hệ thống.</span>
+    </footer>
+
+  </main>
+
+  <!-- ================= BOTTOM NAVIGATION BAR (CHỈ DÀNH CHO MOBILE, ẨN TRÊN DESKTOP md:hidden) ================= -->
+  <nav class="fixed bottom-0 left-0 w-full z-50 flex md:hidden justify-around items-center h-16 bg-surface-container-lowest/98 backdrop-blur-md border-t border-outline-variant shadow-lg select-none">
+    <button data-nav="customers" onclick="switchNav('customers')" class="nav-item flex-1 flex flex-col items-center justify-center py-1 text-primary">
+      <span class="material-symbols-outlined text-[24px] material-symbols-fill">call</span>
+      <span class="text-[12px] font-bold mt-0.5">Khách hàng</span>
+    </button>
+    <button data-nav="stations" onclick="switchNav('stations')" class="nav-item flex-1 flex flex-col items-center justify-center py-1 text-outline hover:text-primary">
+      <span class="material-symbols-outlined text-[24px]">analytics</span>
+      <span class="text-[12px] font-medium mt-0.5">Tiến độ trạm</span>
+    </button>
+    <button data-nav="call-logs" onclick="switchNav('call-logs')" class="nav-item flex-1 flex flex-col items-center justify-center py-1 text-outline hover:text-primary relative">
+      <span class="material-symbols-outlined text-[24px]">phone_in_talk</span>
+      <span class="text-[12px] font-medium mt-0.5">Đã gọi</span>
+      <span id="nav-badge-contacted" class="hidden absolute top-1 right-6 bg-error text-white text-[10px] font-bold px-1.5 rounded-full leading-none min-w-[16px]">0</span>
+    </button>
+    <button data-nav="reports" onclick="switchNav('reports')" class="nav-item flex-1 flex flex-col items-center justify-center py-1 text-outline hover:text-primary">
+      <span class="material-symbols-outlined text-[24px]">badge</span>
+      <span class="text-[12px] font-medium mt-0.5">Báo cáo</span>
+    </button>
+  </nav>
+
+  <!-- ================= FLOATING BACK TO TOP BUTTON (CHỈ HIỆN KHI CUỘN XUỐNG DƯỚI, 1 CHẠM LÊN ĐỈNH) ================= -->
+  <button id="btn-back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-primary text-on-primary shadow-xl border border-white/20 flex items-center justify-center transition-all duration-300 opacity-0 pointer-events-none translate-y-3 cursor-pointer active:scale-90 hover:bg-primary-container" title="Lên đầu trang">
+    <span class="material-symbols-outlined text-[24px]">arrow_upward</span>
+  </button>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 w-11/12 max-w-sm pointer-events-none transition-all duration-200"></div>
+
+  <!-- MODAL: ĐĂNG NHẬP CÁN BỘ HIỆN TRƯỜNG -->
+  <div id="officer-login-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-outline-variant animate-in fade-in zoom-in-95 duration-150">
+      <div class="flex items-center justify-between border-b border-outline-variant/50 pb-3">
+        <div class="flex items-center space-x-2 text-primary">
+          <span class="material-symbols-outlined text-2xl">account_circle</span>
+          <h3 class="text-lg font-bold">Đăng nhập Cán bộ</h3>
+        </div>
+        <button onclick="closeLoginModal()" class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+      <p id="login-modal-subtitle" class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+        Đăng nhập để xem số điện thoại, mở chi tiết mã khách hàng/điểm đo và lưu các cuộc gọi của bạn.
+      </p>
+      <div id="login-error-msg" class="hidden text-xs text-error bg-error-container/20 p-2.5 rounded-lg border border-error/30 font-medium"></div>
+      <form id="form-login" onsubmit="handleLoginSubmit(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-on-surface mb-1">Tên đăng nhập</label>
+          <input id="login-username" name="username" type="text" required autocomplete="username" placeholder="Tài khoản được cấp" class="w-full h-12 px-3.5 bg-surface border border-outline-variant rounded-xl text-base focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 font-medium"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-on-surface mb-1">Mật khẩu</label>
+          <div class="relative">
+            <input id="login-password" type="password" required autocomplete="current-password" placeholder="Nhập mật khẩu..." class="w-full h-12 pl-3.5 pr-11 bg-surface border border-outline-variant rounded-xl text-base focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 font-medium"/>
+            <button type="button" onclick="togglePasswordVisibility('login-password', 'icon-login-pwd-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-outline hover:text-on-surface">
+              <span id="icon-login-pwd-eye" class="material-symbols-outlined text-[20px]">visibility</span>
+            </button>
+          </div>
+        </div>
+        <p class="text-xs text-outline leading-tight">Tài khoản do quản trị viên cấp bằng tool. Mật khẩu được mã hóa an toàn.</p>
+        <button type="submit" id="btn-login-submit" class="w-full h-12 bg-primary text-on-primary hover:bg-primary-container rounded-xl font-bold text-sm sm:text-base shadow-md transition-all flex items-center justify-center space-x-2 active:scale-98 cursor-pointer">
+          <span class="material-symbols-outlined text-[22px]">login</span>
+          <span>Xác nhận Đăng nhập</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: THÔNG TIN CÁN BỘ & ĐĂNG XUẤT -->
+  <div id="officer-profile-modal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-outline-variant animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-outline-variant/50 pb-3">
+        <h3 class="text-base sm:text-lg font-bold text-primary flex items-center space-x-2">
+          <span class="material-symbols-outlined text-[22px]">badge</span>
+          <span>Hồ sơ Cán bộ</span>
+        </h3>
+        <button onclick="closeProfileModal()" class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+      <div class="bg-surface-container-low/50 p-4 rounded-xl border border-outline-variant/40 space-y-2 text-xs sm:text-sm">
+        <p class="text-base font-bold text-primary" id="profile-name">Cán bộ</p>
+        <p class="text-on-surface-variant font-medium">Tài khoản: <span class="font-mono font-bold text-on-surface" id="profile-user">--</span></p>
+        <p class="text-on-surface-variant font-medium">Đơn vị: <span class="text-on-surface font-semibold" id="profile-unit">Điện lực Tiền Hải (PA0903)</span></p>
+        <p class="text-on-surface-variant font-medium">Vai trò: <span class="text-tertiary font-bold uppercase" id="profile-role">Cán bộ</span></p>
+      </div>
+
+      <div class="flex items-center space-x-2.5 pt-2 border-t border-outline-variant/40">
+        <button onclick="closeProfileModal()" class="flex-1 h-11 rounded-xl border border-outline-variant text-xs sm:text-sm font-bold hover:bg-surface-container-low cursor-pointer">Đóng</button>
+        <button onclick="handleLogout()" class="flex-1 h-11 bg-error text-white hover:bg-error/90 rounded-xl text-xs sm:text-sm font-bold shadow-xs flex items-center justify-center space-x-1 cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">logout</span>
+          <span>Đăng xuất</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: HỘP THOẠI CHỌN TÌNH TRẠNG CUỘC GỌI -->
+  <div id="call-confirm-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-outline-variant animate-in fade-in zoom-in-95 duration-150">
+      <div class="flex items-center space-x-2 text-primary border-b border-outline-variant/50 pb-2.5">
+        <span class="material-symbols-outlined text-2xl">phone_callback</span>
+        <h3 class="text-base sm:text-lg font-bold">Kết quả cuộc gọi</h3>
+      </div>
+      <p class="text-xs sm:text-sm text-on-surface leading-relaxed">
+        Chọn tình trạng cuộc gọi cho số <strong id="modal-phone-number" class="text-primary font-mono font-bold text-base">...</strong>
+        (<span id="modal-rep-name" class="font-semibold text-on-surface">Khách hàng</span>):
+      </p>
+      <div class="space-y-2" id="call-status-options">
+        <button data-call-status="Đã gọi" class="call-status-btn w-full h-12 rounded-xl text-sm font-bold flex items-center space-x-3 px-4 border border-outline-variant hover:bg-tertiary-fixed/30 hover:border-tertiary transition-all cursor-pointer active:scale-98 bg-surface-container-low">
+          <span class="material-symbols-outlined text-[20px] text-tertiary material-symbols-fill">check_circle</span>
+          <span>Đã gọi (liên hệ được)</span>
+        </button>
+        <button data-call-status="Không nghe máy" class="call-status-btn w-full h-12 rounded-xl text-sm font-bold flex items-center space-x-3 px-4 border border-outline-variant hover:bg-amber-50 hover:border-amber-400 transition-all cursor-pointer active:scale-98 bg-surface-container-low">
+          <span class="material-symbols-outlined text-[20px] text-amber-500">phone_missed</span>
+          <span>Khách hàng không nghe máy</span>
+        </button>
+        <button data-call-status="Không tin" class="call-status-btn w-full h-12 rounded-xl text-sm font-bold flex items-center space-x-3 px-4 border border-outline-variant hover:bg-red-50 hover:border-red-300 transition-all cursor-pointer active:scale-98 bg-surface-container-low">
+          <span class="material-symbols-outlined text-[20px] text-red-400">warning</span>
+          <span>Khách hàng không tin</span>
+        </button>
+        <button data-call-status="other" class="call-status-btn w-full h-12 rounded-xl text-sm font-bold flex items-center space-x-3 px-4 border border-outline-variant hover:bg-surface-container hover:border-primary/40 transition-all cursor-pointer active:scale-98 bg-surface-container-low">
+          <span class="material-symbols-outlined text-[20px] text-outline">edit_note</span>
+          <span>Nội dung khác...</span>
+        </button>
+      </div>
+      <div id="call-status-custom-wrap" class="hidden space-y-2">
+        <input id="call-status-custom-input" type="text" maxlength="100" placeholder="Nhập nội dung ghi chú..." class="w-full h-11 px-4 bg-surface-container-lowest border border-outline-variant rounded-xl text-sm placeholder-outline focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-medium"/>
+        <button id="call-status-custom-confirm" class="w-full h-11 rounded-xl text-sm font-bold bg-primary text-on-primary hover:bg-primary-container shadow-md flex items-center justify-center space-x-1 cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">check</span>
+          <span>Xác nhận</span>
+        </button>
+      </div>
+      <button id="modal-btn-cancel" class="w-full h-10 rounded-xl text-xs sm:text-sm font-semibold text-outline hover:bg-surface-container-low border border-outline-variant cursor-pointer">Bỏ qua</button>
+    </div>
+  </div>
+
+  <!-- MODAL: CHỌN TRẠM ĐIỆN NHANH -->
+  <div id="station-picker-modal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all">
+    <div class="bg-surface-container-lowest rounded-t-2xl sm:rounded-2xl max-w-lg w-full max-h-[88vh] flex flex-col shadow-2xl border border-outline-variant animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- Modal Header -->
+      <div class="p-4 border-b border-outline-variant flex items-center justify-between">
+        <div>
+          <h3 class="text-base sm:text-lg font-bold text-primary flex items-center space-x-1.5">
+            <span class="material-symbols-outlined text-[22px]">electrical_services</span>
+            <span>Chọn Trạm Điện Lực</span>
+          </h3>
+          <p id="modal-station-count-info" class="text-xs text-outline mt-0.5">Gõ vài ký tự để lọc nhanh trong 707 trạm</p>
+        </div>
+        <button id="btn-close-station-modal" onclick="closeStationModal()" class="w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-outline hover:text-on-surface active:scale-90 transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- Search & Sort Box in Modal -->
+      <div class="p-3.5 border-b border-outline-variant space-y-2.5 bg-surface-container-low/40">
+        <!-- Live Instant Search Input -->
+        <div class="relative flex items-center">
+          <span class="material-symbols-outlined absolute left-3.5 text-outline text-[20px]">search</span>
+          <input id="input-modal-station-search" class="w-full h-11 pl-10 pr-9 bg-surface-container-lowest border border-outline-variant rounded-xl text-sm sm:text-base placeholder-outline focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-xs transition-all font-medium" placeholder="Gõ tên trạm (vd: nam hai, tay tien...) hoặc mã trạm..." autocomplete="off"/>
+          <button id="btn-clear-modal-station" class="hidden absolute right-3 w-6 h-6 flex items-center justify-center text-outline hover:text-on-surface">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        </div>
+
+        <!-- Sort Controls in Modal -->
+        <div class="flex items-center space-x-1.5 overflow-x-auto pb-0.5 text-nowrap text-xs scrollbar-none">
+          <span class="text-outline text-xs font-semibold shrink-0">Xếp theo:</span>
+          <button data-modal-sort="name-asc" class="modal-sort-btn px-2.5 py-1 rounded-lg border border-primary bg-primary text-on-primary font-bold shadow-xs transition-all cursor-pointer">Tên A-Z</button>
+          <button data-modal-sort="rate-asc" class="modal-sort-btn px-2.5 py-1 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface font-medium hover:bg-surface-container-low transition-all cursor-pointer">% Thấp ↗</button>
+          <button data-modal-sort="rate-desc" class="modal-sort-btn px-2.5 py-1 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface font-medium hover:bg-surface-container-low transition-all cursor-pointer">% Cao ↘</button>
+          <button data-modal-sort="uninstalled-desc" class="modal-sort-btn px-2.5 py-1 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface font-medium hover:bg-surface-container-low transition-all cursor-pointer">Chưa cài nhiều</button>
+          <button data-modal-sort="code-asc" class="modal-sort-btn px-2.5 py-1 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface font-medium hover:bg-surface-container-low transition-all cursor-pointer">Mã trạm</button>
+        </div>
+      </div>
+
+      <!-- Trạm xem gần đây (Recent Stations - 1 chạm đổi trạm siêu tốc không cần gõ phím) -->
+      <div id="modal-recent-stations-box" class="hidden px-3.5 py-2.5 border-b border-outline-variant/60 bg-surface-container-low/50">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-[11px] font-bold text-outline uppercase tracking-wider flex items-center space-x-1">
+            <span class="material-symbols-outlined text-[15px] text-primary">history</span>
+            <span>Trạm bạn xem gần đây:</span>
+          </span>
+          <span class="text-[11px] text-outline">Bấm để đổi ngay</span>
+        </div>
+        <div id="modal-recent-stations-chips" class="flex items-center space-x-2 overflow-x-auto pb-1 text-nowrap scrollbar-none">
+          <!-- Render recent stations chips -->
+        </div>
+      </div>
+
+      <!-- Station Options List -->
+      <div id="modal-stations-list" class="overflow-y-auto p-2.5 space-y-2 flex-1 min-h-[280px] max-h-[55vh]">
+        <!-- Render station options here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION CORE -->
+  <script>
+    const state = {
+      currentStation: null,
+      stations: [],
+      filterStatus: "uninstalled",
+      groupByPhone: true,
+      searchQuery: "",
+      searchScope: "current",
+      globalSearchIndex: null,
+      page: 1,
+      pageSize: 30,
+      totalPages: 1,
+      totalCount: 0,
+      subFilter: "uncontacted",
+      authToken: null,
+      currentUser: null,
+      myContactedPhones: new Map(),
+      lastDialedPhone: null,
+      lastDialedRep: null,
+      lastData: null,
+      stationSort: "name-asc",
+      stationQuery: "",
+      modalSort: "name-asc",
+      modalQuery: "",
+      stationDataCache: new Map()
+    };
+
+    // Toggle Mobile Mini Stats Accordion (Thu gọn hoặc mở rộng widget thống kê trên điện thoại)
+    function toggleMobileStatsAccordion() {
+      const wrapper = document.getElementById("stats-collapsible-wrapper");
+      const arrow = document.getElementById("mobile-stats-arrow");
+      const btnText = document.getElementById("mobile-stats-btn-text");
+      if (!wrapper) return;
+      const isHidden = wrapper.classList.contains("hidden");
+      if (isHidden) {
+        wrapper.classList.remove("hidden");
+        if (arrow && arrow.style) arrow.style.transform = "rotate(180deg)";
+        if (btnText) btnText.textContent = "Thu gọn chi tiết";
+      } else {
+        wrapper.classList.add("hidden");
+        if (arrow && arrow.style) arrow.style.transform = "rotate(0deg)";
+        if (btnText) btnText.textContent = "Chi tiết & Gom nhóm";
+      }
+    }
+    window.toggleMobileStatsAccordion = toggleMobileStatsAccordion;
+
+    // Recent Stations Helper (Lưu 5 trạm xem gần nhất vào localStorage để chuyển 1 chạm)
+    const RECENT_STATIONS_STORAGE_KEY = "cskh_recent_stations_v1";
+
+    function addRecentStation(st) {
+      if (!st || !st.station_id) return;
+      try {
+        let recents = JSON.parse(localStorage.getItem(RECENT_STATIONS_STORAGE_KEY) || "[]");
+        recents = recents.filter(x => x.station_id !== st.station_id);
+        recents.unshift({
+          station_id: st.station_id,
+          station_name: st.station_name || st.station_id,
+          installed_rate: st.installed_rate || 0,
+          uninstalled_count: st.uninstalled_count || 0
+        });
+        recents = recents.slice(0, 5);
+        localStorage.setItem(RECENT_STATIONS_STORAGE_KEY, JSON.stringify(recents));
+      } catch {}
+    }
+
+    function renderRecentStationsModal() {
+      const box = document.getElementById("modal-recent-stations-box");
+      const chipsContainer = document.getElementById("modal-recent-stations-chips");
+      if (!box || !chipsContainer) return;
+      try {
+        const recents = JSON.parse(localStorage.getItem(RECENT_STATIONS_STORAGE_KEY) || "[]");
+        if (!Array.isArray(recents) || recents.length === 0) {
+          box.classList.add("hidden");
+          return;
+        }
+        box.classList.remove("hidden");
+        chipsContainer.innerHTML = recents.map(r => `
+          <button type="button" onclick="switchToStation('${escapeHtml(r.station_id)}'); closeStationModal();" class="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-xl bg-surface-container-lowest border border-primary/30 hover:bg-primary hover:text-on-primary text-primary text-xs font-bold transition-all shadow-xs cursor-pointer active:scale-95 shrink-0">
+            <span class="material-symbols-outlined text-[15px]">bolt</span>
+            <span class="truncate max-w-[130px] sm:max-w-none">${escapeHtml(r.station_name)}</span>
+            <span class="text-[10px] opacity-80 font-mono">(${r.installed_rate || 0}%)</span>
+          </button>
+        `).join("");
+      } catch {
+        box.classList.add("hidden");
+      }
+    }
+
+    function showToast(message, type = "info") {
+      const container = document.getElementById("toast-container");
+      if (!container) return;
+      const toast = document.createElement("div");
+      let bgColor = "bg-on-surface text-surface";
+      let icon = "info";
+      if (type === "warning") {
+        bgColor = "bg-secondary-container text-white";
+        icon = "warning";
+      } else if (type === "error") {
+        bgColor = "bg-error text-white";
+        icon = "error";
+      } else if (type === "success") {
+        bgColor = "bg-tertiary-container text-white";
+        icon = "check_circle";
+      }
+      toast.className = `${bgColor} px-4 py-3 rounded-2xl shadow-xl text-xs sm:text-sm font-bold flex items-center space-x-2 animate-in fade-in slide-in-from-top-4 duration-150 mb-2 pointer-events-auto border border-white/20`;
+      toast.innerHTML = `
+        <span class="material-symbols-outlined text-[20px] shrink-0">${icon}</span>
+        <span class="flex-1 toast-message"></span>
+        <button onclick="this.parentElement.remove()" class="opacity-80 hover:opacity-100"><span class="material-symbols-outlined text-[18px]">close</span></button>
+      `;
+      toast.querySelector(".toast-message").textContent = String(message);
+      container.appendChild(toast);
+      setTimeout(() => { if (toast.parentElement) toast.remove(); }, 4000);
+    }
+
+    function togglePasswordVisibility(inputId, iconId) {
+      const inp = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (!inp) return;
+      if (inp.type === "password") {
+        inp.type = "text";
+        if (icon) icon.textContent = "visibility_off";
+      } else {
+        inp.type = "password";
+        if (icon) icon.textContent = "visibility";
+      }
+    }
+
+    function loadOfficerContacted() {
+      if (state.currentUser && state.currentUser.username) {
+        const u = state.currentUser.username.toLowerCase();
+        try {
+          const stored = JSON.parse(localStorage.getItem("cskh_contacted_" + u) || "[]");
+          state.myContactedPhones = new Map();
+          if (Array.isArray(stored)) {
+            stored.forEach(item => {
+              if (typeof item === "string" || typeof item === "number") {
+                const p = String(item).replace(/\D/g, "");
+                if (p) state.myContactedPhones.set(p, {status: "Đã gọi", note: "", time: ""});
+              } else if (item && typeof item === "object" && item.phone) {
+                const p = String(item.phone).replace(/\D/g, "");
+                if (p) state.myContactedPhones.set(p, {status: item.status || "Đã gọi", note: item.note || "", time: item.time || ""});
+              }
+            });
+          }
+        } catch { state.myContactedPhones = new Map(); }
+      } else {
+        state.myContactedPhones = new Map();
+      }
+      updateNavBadge();
+    }
+
+    function saveOfficerContacted() {
+      if (state.currentUser && state.currentUser.username) {
+        const u = state.currentUser.username.toLowerCase();
+        try {
+          const arr = [];
+          state.myContactedPhones.forEach((info, phone) => {
+            arr.push({phone, status: info.status, note: info.note, time: info.time});
+          });
+          localStorage.setItem("cskh_contacted_" + u, JSON.stringify(arr));
+        } catch { showToast("Trình duyệt không cho lưu lịch sử. Chưa lưu thay đổi.", "error"); return false; }
+      }
+      updateNavBadge();
+      return true;
+    }
+
+    function updateNavBadge() {
+      const badge = document.getElementById("nav-badge-contacted");
+      const dBadge = document.getElementById("desktop-nav-badge-contacted");
+      const count = state.myContactedPhones ? state.myContactedPhones.size : 0;
+      if (count > 0) {
+        if (badge) { badge.textContent = count; badge.classList.remove("hidden"); }
+        if (dBadge) { dBadge.textContent = count; dBadge.classList.remove("hidden"); }
+      } else {
+        if (badge) badge.classList.add("hidden");
+        if (dBadge) dBadge.classList.add("hidden");
+      }
+    }
+
+    function updateChipBadges(uncontacted, contacted, total) {
+      const bUnc = document.getElementById("badge-chip-uncontacted");
+      const bCon = document.getElementById("badge-chip-contacted");
+      const bAll = document.getElementById("badge-chip-all");
+      if (bUnc) bUnc.textContent = typeof uncontacted === "number" ? uncontacted : "...";
+      if (bCon) bCon.textContent = typeof contacted === "number" ? contacted : "...";
+      if (bAll) bAll.textContent = typeof total === "number" ? total : "...";
+    }
+
+    function updateUserAvatarUI() {
+      const avatarInitials = document.getElementById("user-avatar-initials");
+      const avatarBtn = document.getElementById("btn-user-avatar");
+      if (!avatarInitials || !avatarBtn) return;
+      if (state.currentUser && state.currentUser.officer_name) {
+        const parts = state.currentUser.officer_name.trim().split(" ");
+        const initials = parts.length >= 2 ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase() : parts[0].substring(0, 2).toUpperCase();
+        avatarInitials.textContent = initials;
+        avatarBtn.className = "w-10 h-10 rounded-xl bg-tertiary text-on-primary flex items-center justify-center text-sm font-bold border border-tertiary/40 cursor-pointer active:scale-95 shadow-xs";
+        avatarBtn.title = `${state.currentUser.officer_name} (${state.currentUser.username})`;
+      } else {
+        avatarInitials.textContent = "ĐN";
+        avatarBtn.className = "w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center text-sm font-bold border border-outline-variant cursor-pointer active:scale-95 shadow-xs";
+        avatarBtn.title = "Bấm để đăng nhập cán bộ";
+      }
+    }
+
+    function handleUserAvatarClick() {
+      if (state.currentUser && state.authToken) {
+        openProfileModal();
+      } else {
+        openLoginModal();
+      }
+    }
+
+    function openLoginModal(customSubtitle = null) {
+      const sub = document.getElementById("login-modal-subtitle");
+      if (sub && customSubtitle) sub.textContent = customSubtitle;
+      document.getElementById("login-error-msg").classList.add("hidden");
+      document.getElementById("officer-login-modal").classList.remove("hidden");
+    }
+
+    function closeLoginModal() {
+      document.getElementById("officer-login-modal").classList.add("hidden");
+    }
+
+    function openProfileModal() {
+      if (!state.currentUser) return;
+      document.getElementById("profile-name").textContent = state.currentUser.officer_name || "Cán bộ";
+      document.getElementById("profile-user").textContent = state.currentUser.username || "--";
+      document.getElementById("profile-unit").textContent = state.currentUser.unit || "Điện lực Tiền Hải (PA0903)";
+      document.getElementById("profile-role").textContent = state.currentUser.role || "Cán bộ";
+
+      document.getElementById("officer-profile-modal").classList.remove("hidden");
+    }
+
+    function closeProfileModal() {
+      document.getElementById("officer-profile-modal").classList.add("hidden");
+    }
+
+    let authEpoch = 0;
+    const STATIC_SESSION_KEY = "cskh_static_session_v1";
+    async function loadLoginUsers() {
+      const registry = await authRequest("https://raw.githubusercontent.com/nguyentuan86pctb-cpu/APP-CSKH-TIENHAI/main/users.json?fresh=" + Date.now());
+      if (registry.schema_version !== 1 || !Array.isArray(registry.users) || registry.users.length > 1000) throw Error("Danh sách tài khoản không hợp lệ");
+      const seen = new Set();
+      for (const user of registry.users) {
+        if (!/^[a-z0-9][a-z0-9_.-]{2,63}$/.test(user.username) || seen.has(user.username) ||
+            typeof user.active !== "boolean" || user.iterations !== 600000 ||
+            !/^[0-9a-f]{32}$/.test(user.salt) || !/^[0-9a-f]{64}$/.test(user.password_hash)) throw Error("Danh sách tài khoản không hợp lệ");
+        seen.add(user.username);
+      }
+      return registry.users;
+    }
+    async function verifyBrowserPassword(password, user) {
+      const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
+      const salt = Uint8Array.from(user.salt.match(/../g), byte => parseInt(byte,16));
+      const bits = await crypto.subtle.deriveBits({name:"PBKDF2",hash:"SHA-256",salt,iterations:600000},key,256);
+      return Array.from(new Uint8Array(bits), byte => byte.toString(16).padStart(2,"0")).join("") === user.password_hash;
+    }
+    function acceptBrowserIdentity(user) {
+      state.currentUser = {username:user.username, officer_name:user.username, unit:"Điện lực Tiền Hải (PA0903)",role:user.username==="admin"?"admin":"officer"};
+      state.authToken = "browser-ui-only";
+      loadOfficerContacted();
+      updateUserAvatarUI();
+    }
+    async function authRequest(path, options = {}) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 12000);
+      try {
+        const response = await fetch(path, {...options, credentials: "same-origin", cache: "no-store", signal: controller.signal});
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail || data.error || "Không thể xác thực. Vui lòng thử lại.");
+        return data;
+      } finally { clearTimeout(timer); }
+    }
+
+    function clearPrivateView() {
+      authEpoch++;
+      state.authToken = null;
+      state.currentUser = null;
+      state.myContactedPhones = new Map();
+      state.lastData = null;
+      state.lastDialedPhone = null;
+      state.lastDialedRep = null;
+      state.stationDataCache = new Map();
+      try { sessionStorage.removeItem(STATIC_SESSION_KEY); } catch {}
+      document.getElementById("cards-container").replaceChildren();
+      document.getElementById("call-logs-container").replaceChildren();
+      document.getElementById("toast-container").replaceChildren();
+      document.getElementById("call-confirm-modal").classList.add("hidden");
+      document.getElementById("modal-phone-number").textContent = "";
+      document.getElementById("modal-rep-name").textContent = "";
+      closeProfileModal();
+      for (const id of ["profile-name", "profile-user", "profile-unit", "profile-role"]) document.getElementById(id).textContent = "";
+      updateUserAvatarUI();
+      updateNavBadge();
+    }
+
+    async function refreshSession() {
+      const epoch = authEpoch;
+      try {
+        const stored = JSON.parse(sessionStorage.getItem(STATIC_SESSION_KEY) || "null");
+        if (!stored || stored.exp <= Date.now()) throw Error("Session expired");
+        const users = await loadLoginUsers();
+        if (epoch !== authEpoch) return false;
+        const user = users.find(x=>x.username===stored.username && x.active && x.password_hash===stored.fingerprint);
+        if (!user) throw Error("Account disabled or password changed");
+        const identityChanged = state.currentUser && state.currentUser.username !== user.username;
+        if (identityChanged) clearPrivateView();
+        acceptBrowserIdentity(user);
+        return !identityChanged;
+      } catch {
+        if (epoch === authEpoch) clearPrivateView();
+        return false;
+      }
+    }
+
+    async function handleLoginSubmit(event) {
+      event.preventDefault();
+      const u = document.getElementById("login-username").value.trim();
+      const p = document.getElementById("login-password").value;
+      const errBox = document.getElementById("login-error-msg");
+      errBox.classList.add("hidden");
+
+      const button = document.getElementById("btn-login-submit");
+      button.disabled = true;
+      const epoch = ++authEpoch;
+      try {
+        const users = await loadLoginUsers();
+        const user = users.find(x=>x.username===u.toLowerCase() && x.active);
+        if (!user || !await verifyBrowserPassword(p,user)) throw Error("Invalid login");
+        if (epoch !== authEpoch) return;
+        sessionStorage.setItem(STATIC_SESSION_KEY,JSON.stringify({username:user.username,fingerprint:user.password_hash,exp:Date.now()+8*3600*1000}));
+        acceptBrowserIdentity(user);
+        closeLoginModal();
+        updateUserAvatarUI();
+        await fetchCustomers();
+        renderCallLogsView();
+      } catch (err) {
+        errBox.textContent = "Không đăng nhập được. Kiểm tra tài khoản hoặc kết nối dịch vụ xác thực.";
+        errBox.classList.remove("hidden");
+      } finally {
+        document.getElementById("login-password").value = "";
+        button.disabled = false;
+      }
+    }
+
+    async function handleLogout() {
+      clearPrivateView();
+      showToast("Đã đăng xuất trên trình duyệt này", "info");
+      await fetchCustomers();
+    }
+
+    function removeVietnameseTones(str) {
+      str = String(str || "");
+      str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      str = str.replace(/[đĐ]/g, "d");
+      return str.toLowerCase().trim();
+    }
+
+    function getFilteredAndSortedStations(query, sortKey) {
+      let list = state.stations ? [...state.stations] : [];
+      if (query && query.trim()) {
+        const qClean = removeVietnameseTones(query);
+        list = list.filter(s => {
+          const nameClean = removeVietnameseTones(s.station_name);
+          const idClean = removeVietnameseTones(s.station_id);
+          return nameClean.includes(qClean) || idClean.includes(qClean);
+        });
+      }
+
+      list.sort((a, b) => {
+        switch (sortKey) {
+          case "name-asc":
+            return (a.station_name || "").localeCompare(b.station_name || "", "vi");
+          case "name-desc":
+            return (b.station_name || "").localeCompare(a.station_name || "", "vi");
+          case "rate-asc":
+            return (a.installed_rate || 0) - (b.installed_rate || 0);
+          case "rate-desc":
+            return (b.installed_rate || 0) - (a.installed_rate || 0);
+          case "uninstalled-desc":
+            return (b.uninstalled_count || 0) - (a.uninstalled_count || 0);
+          case "code-asc":
+          default:
+            return (a.station_id || "").localeCompare(b.station_id || "", "vi");
+        }
+      });
+
+      return list;
+    }
+
+    function setSyncTimestamps(info) {
+      if (!info) return;
+      const exp = info.exported_at || "--";
+      const cmis = info.cmis_sync_time || "--";
+      const cms = info.cms_sync_time || "--";
+
+      const setT = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+      };
+
+      setT("top-sync-time", exp);
+      setT("time-sync-customers", exp);
+      setT("cmis-time-customers", cmis);
+      setT("cms-time-customers", cms);
+
+      setT("time-sync-stations", exp);
+      setT("cmis-time-stations", cmis);
+
+      setT("time-sync-calls", "Thời gian thực");
+
+      setT("time-sync-reports", exp);
+      setT("cmis-time-reports", cmis);
+      setT("cms-time-reports", cms);
+    }
+
+    // API Calls with Fast CDN Edge Resolution & Fail-Safe Fallback
+    async function fetchJsonCandidates(urls, timeoutMs = 3000) {
+      for (const url of urls) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          const res = await fetch(url, { signal: controller.signal, cache: "no-store" });
+          if (res && res.ok) {
+            const text = await res.text();
+            const trimmed = text.trim();
+            if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+              return JSON.parse(trimmed);
+            }
+          }
+        } catch (e) {
+          // try next candidate url
+        } finally { clearTimeout(timer); }
+      }
+      return null;
+    }
+
+    async function fetchOverview() {
+      try {
+        const candidates = ["/data/overview.json"];
+
+        const data = await fetchJsonCandidates(candidates, 3000);
+        if (!data) return;
+
+        document.getElementById("rep-total").textContent = data.total_points?.toLocaleString() || "0";
+        document.getElementById("rep-installed").textContent = data.installed_count?.toLocaleString() || "0";
+        document.getElementById("rep-uninstalled").textContent = data.uninstalled_count?.toLocaleString() || "0";
+        document.getElementById("rep-rate").textContent = (data.installed_rate || 0) + "%";
+        setSyncTimestamps(data);
+      } catch (e) {
+        console.error("Lỗi lấy overview", e);
+      }
+    }
+
+    async function fetchStations() {
+      try {
+        const candidates = ["/data/stations.json"];
+
+        const data = await fetchJsonCandidates(candidates, 3500);
+        if (!data || !data.stations) {
+          console.error("Không thể tải danh sách trạm");
+          return;
+        }
+
+        state.stations = escapeRenderData(data.stations || []);
+        if (!state.currentStation && state.stations.length > 0) {
+          state.currentStation = state.stations[0];
+        }
+        renderCurrentStationHeader();
+        renderStationsView();
+        setSyncTimestamps(data);
+      } catch (e) {
+        console.error("Lỗi lấy trạm", e);
+      }
+    }
+
+    let customerRequestId = 0;
+    async function fetchCustomers() {
+      if (state.currentUser) await refreshSession();
+      const requestId = ++customerRequestId;
+      const epoch = authEpoch;
+      const container = document.getElementById("cards-container");
+      container.innerHTML = `
+        <div class="py-16 text-center text-outline text-base">
+          <span class="material-symbols-outlined text-5xl animate-spin text-primary mb-3">progress_activity</span>
+          <p class="font-semibold">Đang tải danh sách khách hàng...</p>
+        </div>`;
+
+      if (!state.currentStation && (!state.stations || state.stations.length === 0)) {
+        await fetchStations();
+      }
+      const stId = state.currentStation ? state.currentStation.station_id : "";
+      if (!stId && state.searchScope === "current") {
+        container.innerHTML = `<div class="p-6 text-center text-error bg-error-container/20 rounded-2xl">Không tìm thấy trạm điện để tải dữ liệu.</div>`;
+        return;
+      }
+      renderProgressCard({});
+      if (!state.currentUser) {
+        container.innerHTML = `
+          <div class="p-8 text-center bg-surface-container-lowest rounded-2xl border border-outline-variant space-y-3.5 shadow-xs">
+            <span class="material-symbols-outlined text-4xl text-primary">lock</span>
+            <p class="font-mono text-2xl font-bold text-outline">•••• ••• •••</p>
+            <p class="text-sm text-on-surface-variant font-medium">Số điện thoại và thông tin chi tiết được bảo mật. Vui lòng đăng nhập để xem và gọi cho khách hàng.</p>
+            <button onclick="openLoginModal()" class="px-5 py-2.5 rounded-xl bg-primary text-on-primary font-bold text-sm shadow-md hover:bg-primary-container active:scale-95 transition-all cursor-pointer">
+              Đăng nhập để xem danh sách
+            </button>
+          </div>`;
+        document.getElementById("label-total-count").textContent = "Danh sách được bảo vệ";
+        document.getElementById("pagination-container").classList.add("hidden");
+        return;
+      }
+
+      // ==========================================
+      // CHẾ ĐỘ 1: TÌM TRONG TOÀN BỘ 707 TRẠM
+      // ==========================================
+      if (state.searchScope === "all") {
+        if (!state.searchQuery || state.searchQuery.trim().length < 2) {
+          container.innerHTML = `
+            <div class="py-16 px-4 text-center text-outline bg-surface-container-lowest rounded-2xl border border-outline-variant p-6 space-y-3 shadow-xs">
+              <span class="material-symbols-outlined text-5xl text-primary mb-1">travel_explore</span>
+              <p class="font-bold text-on-surface text-base sm:text-lg">Tìm kiếm trong toàn bộ 707 trạm Tiền Hải</p>
+              <p class="text-xs sm:text-sm text-outline max-w-md mx-auto leading-relaxed">Vui lòng nhập từ 2 ký tự trở lên (Số điện thoại, Tên khách hàng, Mã KH PA09..., Số công tơ hoặc Số cột) để tra cứu trên toàn đơn vị hơn 85.000 điểm đo.</p>
+            </div>`;
+          document.getElementById("label-total-count").textContent = "Toàn bộ trạm";
+          document.getElementById("pagination-container").classList.add("hidden");
+          return;
+        }
+
+        if (!state.globalSearchIndex) {
+          container.innerHTML = `
+            <div class="py-16 text-center text-outline text-base space-y-2">
+              <span class="material-symbols-outlined text-5xl animate-spin text-primary mb-2">travel_explore</span>
+              <p class="font-bold text-on-surface">Đang tải chỉ mục 707 trạm Tiền Hải...</p>
+              <p class="text-xs text-outline">Chỉ cần nạp 1 lần duy nhất để tìm kiếm siêu tốc trên toàn đơn vị.</p>
+            </div>`;
+          try {
+            const rawIndex = await authRequest("/data/stations/search_index.json");
+            if (epoch !== authEpoch || requestId !== customerRequestId) return;
+            state.globalSearchIndex = Array.isArray(rawIndex) ? rawIndex : [];
+          } catch (e) {
+            container.innerHTML = `<div class="p-6 text-center text-error bg-error-container/20 rounded-2xl">Không thể nạp dữ liệu toàn bộ trạm. Vui lòng bấm thử lại.</div>`;
+            return;
+          }
+        }
+
+        const q = removeVietnameseTones(state.searchQuery);
+        let filtered = state.globalSearchIndex.filter(g => {
+          // Schema: [p, r, s, sn, cr, t, i, u, c_ids, meters, poles, addr, other_st]
+          const pClean = (g[0] || "").toLowerCase();
+          const rClean = removeVietnameseTones(g[1] || "");
+          const snClean = removeVietnameseTones(g[3] || "");
+          const aClean = removeVietnameseTones(g[11] || "");
+
+          if (pClean.includes(q) || rClean.includes(q) || snClean.includes(q) || aClean.includes(q)) return true;
+          if (g[8] && g[8].some(cid => String(cid).toLowerCase().includes(q))) return true;
+          if (g[9] && g[9].some(m => String(m).toLowerCase().includes(q))) return true;
+          if (g[10] && g[10].some(po => String(po).toLowerCase().includes(q))) return true;
+          return false;
+        });
+
+        if (state.filterStatus === "uninstalled") {
+          filtered = filtered.filter(g => (g[7] || 0) > 0);
+        } else if (state.filterStatus === "installed") {
+          filtered = filtered.filter(g => (g[7] || 0) === 0);
+        }
+
+        const totalScopeCount = filtered.length;
+        const contactedCount = filtered.filter(g => state.myContactedPhones.has(String(g[0] || "").replace(/\D/g, ""))).length;
+        const uncontactedCount = totalScopeCount - contactedCount;
+        updateChipBadges(uncontactedCount, contactedCount, totalScopeCount);
+
+        if (state.subFilter !== "all") {
+          filtered = filtered.filter(g => state.myContactedPhones.has(String(g[0] || "").replace(/\D/g, "")) === (state.subFilter === "contacted"));
+        }
+
+        const totalCount = filtered.length;
+        state.page = Math.min(state.page, Math.max(1, Math.ceil(totalCount / state.pageSize)));
+        const startIdx = (state.page - 1) * state.pageSize;
+        const paged = filtered.slice(startIdx, startIdx + state.pageSize);
+
+        const groupsMapped = paged.map(g => ({
+          phone: formatPhoneDisplayClient(g[0]),
+          tel: g[0],
+          phone_raw: g[0],
+          carrier: g[4] || "Di động",
+          has_phone: true,
+          representative: g[1],
+          total_points: g[5],
+          installed_count: g[6],
+          uninstalled_count: g[7],
+          status_badge: g[7] > 0 ? "Chưa cài App" : "Đã cài App",
+          station_id: g[2],
+          station_name: g[3],
+          is_global_result: true,
+          stations_count: (g[12] ? g[12].length : 0) + 1,
+          is_multi_station: (g[12] && g[12].length > 0),
+          points: (g[8] || []).map((cid, cIdx) => ({
+            customer_id: cid,
+            customer_name: g[1],
+            station_id: g[2],
+            station_name: g[3],
+            meter_code: (g[9] && g[9][cIdx]) || (g[9] && g[9][0]) || "--",
+            pole_no: (g[10] && g[10][cIdx]) || (g[10] && g[10][0]) || "--",
+            address: g[11] || "",
+            purpose: "Sinh hoạt",
+            is_installed: g[7] === 0,
+            installed_date: null,
+            gcs_book: "--"
+          }))
+        }));
+
+        const globalData = {
+          total_groups: totalCount,
+          total_items: totalCount,
+          page: state.page,
+          page_size: state.pageSize,
+          groups: groupsMapped,
+          items: groupsMapped
+        };
+
+        renderCustomerCards(globalData);
+        renderPagination(globalData);
+        return;
+      }
+
+      // ==========================================
+      // CHẾ ĐỘ 2: TÌM TRONG TRẠM ĐANG XEM
+      // ==========================================
+      try {
+        let data = null;
+        if (!data && stId) {
+          let rawStationData = state.stationDataCache ? state.stationDataCache.get(stId) : null;
+          if (!rawStationData) {
+            rawStationData = await authRequest(`/data/stations/${encodeURIComponent(stId)}.json`);
+            if (rawStationData && state.stationDataCache) {
+              state.stationDataCache.set(stId, rawStationData);
+            }
+          }
+          if (epoch !== authEpoch || requestId !== customerRequestId) return;
+
+          if (rawStationData) {
+            const sourceGroups = rawStationData.groups || [];
+            let allGroups = state.groupByPhone ? sourceGroups : sourceGroups.flatMap(g => g.points || []);
+            rawStationData.all_groups = allGroups;
+
+            let filtered = [...allGroups];
+            if (state.filterStatus === "uninstalled") {
+              filtered = filtered.filter(g => state.groupByPhone ? (g.uninstalled_count || 0) > 0 : !g.is_installed);
+            } else if (state.filterStatus === "installed") {
+              filtered = filtered.filter(g => state.groupByPhone ? (g.uninstalled_count || 0) === 0 : g.is_installed);
+            }
+
+            if (state.searchQuery && state.searchQuery.trim()) {
+              const q = removeVietnameseTones(state.searchQuery);
+              filtered = filtered.filter(g => {
+                const pClean = (g.tel || g.phone || "").toLowerCase();
+                const rClean = removeVietnameseTones(g.representative || g.customer_name || "");
+                const ptsMatch = (g.points || [g]).some(pt =>
+                  (pt.customer_id || "").toLowerCase().includes(q) ||
+                  (pt.meter_code || "").toLowerCase().includes(q) ||
+                  (pt.gcs_book || "").toLowerCase().includes(q) ||
+                  removeVietnameseTones(pt.customer_name || "").includes(q) ||
+                  removeVietnameseTones(pt.address || "").includes(q) ||
+                  (pt.pole_no || "").toLowerCase().includes(q)
+                );
+                return pClean.includes(q) || rClean.includes(q) || ptsMatch;
+              });
+            }
+
+            const totalScopeCount = filtered.length;
+            const contactedCount = filtered.filter(g => state.myContactedPhones.has(String(g.tel || g.phone_raw || "").replace(/\D/g, ""))).length;
+            const uncontactedCount = totalScopeCount - contactedCount;
+            updateChipBadges(uncontactedCount, contactedCount, totalScopeCount);
+
+            if (state.subFilter !== "all") {
+              filtered = filtered.filter(g => state.myContactedPhones.has(String(g.tel || g.phone_raw || "").replace(/\D/g, "")) === (state.subFilter === "contacted"));
+            }
+            const totalCount = filtered.length;
+            state.page = Math.min(state.page, Math.max(1, Math.ceil(totalCount / state.pageSize)));
+            const startIdx = (state.page - 1) * state.pageSize;
+            const pagedGroups = filtered.slice(startIdx, startIdx + state.pageSize);
+
+            data = {
+              ...rawStationData,
+              total_groups: totalCount,
+              total_items: totalCount,
+              page: state.page,
+              page_size: state.pageSize,
+              groups: state.groupByPhone ? pagedGroups : [],
+              items: state.groupByPhone ? [] : pagedGroups
+            };
+          }
+        }
+
+        if (!data) {
+          throw new Error("Không thể tải danh sách khách hàng");
+        }
+
+        renderProgressCard(data);
+        renderCustomerCards(data);
+        renderPagination(data);
+      } catch (e) {
+        if (epoch !== authEpoch || requestId !== customerRequestId) return;
+        container.innerHTML = `<div class="p-6 text-center text-error bg-error-container/20 rounded-2xl">Lỗi kết nối khi tải dữ liệu trạm. Vui lòng bấm làm mới để thử lại.</div>`;
+      }
+    }
+
+    async function togglePointsBox(targetId) {
+      if (!state.currentUser) { openLoginModal(); return; }
+      if (!await refreshSession()) { await fetchCustomers(); openLoginModal(); return; }
+      const box = document.getElementById(targetId);
+      if (!box) return;
+      const isHidden = box.classList.contains("hidden");
+      const btn = document.querySelector(`.btn-toggle-points[data-target="${targetId}"]`);
+      const arrow = btn ? btn.querySelector(".arrow-icon") : null;
+      if (isHidden) {
+        box.classList.remove("hidden");
+        if (arrow) arrow.textContent = "expand_less";
+      } else {
+        box.classList.add("hidden");
+        if (arrow) arrow.textContent = "expand_more";
+      }
+    }
+
+    // Render Pagination Bar
+    function renderPagination(data) {
+      const paginContainer = document.getElementById("pagination-container");
+      const total = state.groupByPhone ? (data.total_groups || 0) : (data.total_items || 0);
+      state.totalCount = total;
+      const totalPages = Math.max(1, Math.ceil(total / state.pageSize));
+      state.totalPages = totalPages;
+
+      if (total > 0) {
+        paginContainer.classList.remove("hidden");
+        const startIdx = (state.page - 1) * state.pageSize + 1;
+        const endIdx = Math.min(total, state.page * state.pageSize);
+        document.getElementById("pagination-info").textContent = 
+          `Hiển thị ${startIdx} - ${endIdx} trong tổng ${total} ${state.groupByPhone ? 'đầu số' : 'khách hàng'}`;
+        document.getElementById("page-indicator").textContent = `Trang ${state.page} / ${totalPages}`;
+        document.getElementById("btn-prev-page").disabled = (state.page <= 1);
+        document.getElementById("btn-next-page").disabled = (state.page >= totalPages);
+      } else {
+        paginContainer.classList.add("hidden");
+      }
+    }
+
+    // Render Hero Progress Card
+    function renderProgressCard(data) {
+      if (!state.currentStation) return;
+      const s = state.currentStation;
+      const rate = s.installed_rate || 0;
+      document.getElementById("progress-percent").textContent = rate + "%";
+      document.getElementById("stat-total").innerHTML = `${s.total_customers.toLocaleString()} <span class="text-xs font-normal text-on-surface-variant">hộ</span>`;
+      document.getElementById("stat-installed").innerHTML = `${s.installed_count.toLocaleString()} <span class="text-xs font-semibold text-tertiary">(${rate}%)</span>`;
+      document.getElementById("stat-uninstalled").innerHTML = `${s.uninstalled_count.toLocaleString()} <span class="text-xs font-normal text-on-surface-variant">KH</span>`;
+      document.getElementById("ring-gauge").setAttribute("stroke-dasharray", `${rate}, 100`);
+
+      const savings = s.saved_calls || (data.saved_calls || 0);
+      document.getElementById("stat-savings").textContent = `Tiết kiệm ${savings} cuộc`;
+
+      // Update Tab Badges
+      document.getElementById("tab-badge-uninstalled").textContent = s.uninstalled_count;
+      document.getElementById("tab-badge-installed").textContent = `(${s.installed_count})`;
+      document.getElementById("tab-badge-all").textContent = `(${s.total_customers})`;
+
+      // Update Grouping Text
+      const uniquePhones = s.unique_uninst_phones || Math.max(1, s.uninstalled_count - savings);
+      document.getElementById("grouping-summary-text").innerHTML = 
+        `Gộp ${s.uninstalled_count} KH thành <strong class="text-primary font-bold">${uniquePhones} đầu số gọi duy nhất</strong>`;
+
+      // Update Mobile Mini Progress Bar
+      const mobilePercent = document.getElementById("mobile-progress-percent");
+      const mobileBar = document.getElementById("mobile-progress-bar");
+      const mobileSummary = document.getElementById("mobile-stats-summary");
+      if (mobilePercent) mobilePercent.textContent = rate + "%";
+      if (mobileBar) {
+        if (!mobileBar.style) mobileBar.style = {};
+        mobileBar.style.width = Math.min(100, rate) + "%";
+        mobileBar.className = (rate >= 65 ? "bg-tertiary-container" : (rate >= 40 ? "bg-secondary-container" : "bg-primary-container")) + " h-full rounded-full transition-all duration-500";
+      }
+      if (mobileSummary) {
+        mobileSummary.textContent = `${s.installed_count.toLocaleString()} đã cài / ${s.uninstalled_count.toLocaleString()} chưa cài`;
+      }
+    }
+
+    // Escape Render Data
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, c => ({"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"}[c]));
+    }
+
+    function escapeRenderData(value) {
+      if (typeof value === "string") return escapeHtml(value);
+      if (Array.isArray(value)) return value.map(escapeRenderData);
+      if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([k,v]) => [k, escapeRenderData(v)]));
+      return value;
+    }
+
+    // Render Customer Cards (TO RÕ TRÊN ĐIỆN THOẠI, CHUYÊN NGHIỆP TRÊN MÁY TÍNH)
+    function renderCustomerCards(data) {
+      const container = document.getElementById("cards-container");
+      container.innerHTML = "";
+      state.lastData = data;
+
+      const isAuth = !!(state.currentUser && state.authToken);
+      let items = state.groupByPhone ? (data.groups || []) : (data.items || []);
+
+      // Sub-filters: all / uncontacted / contacted
+      if (state.subFilter === "uncontacted") {
+        items = items.filter(x => {
+          const p = (x.tel || x.phone_raw || "").replace(/\D/g, "");
+          return !state.myContactedPhones.has(p);
+        });
+      } else if (state.subFilter === "contacted") {
+        if (!isAuth) {
+          container.innerHTML = `
+            <div class="py-16 text-center text-outline bg-surface-container-lowest rounded-2xl border border-outline-variant p-6 space-y-3.5">
+              <span class="material-symbols-outlined text-4xl text-primary">lock</span>
+              <p class="font-bold text-on-surface text-base">Mục này yêu cầu đăng nhập</p>
+              <p class="text-sm">Vui lòng đăng nhập tài khoản cán bộ để xem danh sách khách hàng bạn đã liên hệ.</p>
+              <button onclick="openLoginModal()" class="px-5 py-2.5 bg-primary text-on-primary rounded-xl font-bold text-sm shadow-md cursor-pointer hover:bg-primary-container">Đăng nhập ngay</button>
+            </div>`;
+          document.getElementById("label-total-count").textContent = `0 đầu mối`;
+          return;
+        }
+        items = items.filter(x => {
+          const p = (x.tel || x.phone_raw || "").replace(/\D/g, "");
+          return state.myContactedPhones.has(p);
+        });
+      }
+
+      const headEl = document.getElementById("heading-customer-text");
+      if (headEl) {
+        if (state.subFilter === "uncontacted") headEl.textContent = "Danh sách khách hàng ưu tiên (Chưa gọi)";
+        else if (state.subFilter === "contacted") headEl.textContent = "Danh sách khách hàng đã gọi";
+        else headEl.textContent = "Tất cả danh sách khách hàng";
+      }
+
+      const suffix = state.subFilter === "uncontacted" ? "chưa gọi" : (state.subFilter === "contacted" ? "đã gọi" : "đầu mối");
+      document.getElementById("label-total-count").textContent = `${items.length} ${suffix}`;
+
+      if (items.length === 0) {
+        if (state.searchScope === "current" && state.searchQuery && state.searchQuery.trim().length >= 2) {
+          const stName = state.currentStation ? state.currentStation.station_name : "trạm này";
+          container.innerHTML = `
+            <div class="py-12 px-4 text-center text-outline bg-surface-container-lowest rounded-2xl border border-outline-variant p-6 space-y-3.5 shadow-xs">
+              <span class="material-symbols-outlined text-5xl mb-1 text-outline">search_off</span>
+              <p class="font-bold text-on-surface text-base sm:text-lg">Không tìm thấy "${escapeHtml(state.searchQuery)}" trong trạm ${escapeHtml(stName)}</p>
+              <p class="text-xs sm:text-sm text-outline max-w-md mx-auto leading-relaxed">Số điện thoại hoặc khách hàng này có thể thuộc một trạm điện khác trong 707 trạm Tiền Hải.</p>
+              <button onclick="setSearchScope('all')" class="mt-2 px-5 py-3 rounded-xl bg-primary text-on-primary font-bold text-sm shadow-md hover:bg-primary-container active:scale-95 transition-all inline-flex items-center space-x-2 cursor-pointer">
+                <span class="material-symbols-outlined text-[20px]">travel_explore</span>
+                <span>🔍 Tìm "${escapeHtml(state.searchQuery)}" trong toàn bộ 707 trạm</span>
+              </button>
+            </div>`;
+          return;
+        }
+
+        if (state.subFilter === "uncontacted") {
+          container.innerHTML = `
+            <div class="py-16 text-center text-outline bg-surface-container-lowest rounded-2xl border border-outline-variant p-6 space-y-2">
+              <span class="material-symbols-outlined text-5xl mb-2 text-tertiary material-symbols-fill">check_circle</span>
+              <p class="font-bold text-on-surface text-base sm:text-lg">Tuyệt vời! Đã gọi hết khách hàng trong danh sách này</p>
+              <p class="text-xs sm:text-sm text-outline">Tất cả khách hàng đã được liên hệ. Bấm chip <strong>Đã gọi</strong> hoặc tab <strong>Đã gọi</strong> để xem lại danh sách.</p>
+            </div>`;
+          return;
+        }
+
+        container.innerHTML = `
+          <div class="py-16 text-center text-outline bg-surface-container-lowest rounded-2xl border border-outline-variant p-6">
+            <span class="material-symbols-outlined text-5xl mb-2 text-outline">check_circle</span>
+            <p class="font-bold text-on-surface text-base sm:text-lg">Không có khách hàng trong mục này</p>
+            <p class="text-xs sm:text-sm mt-1">Đổi bộ lọc hoặc từ khóa tìm kiếm để tiếp tục</p>
+          </div>`;
+        return;
+      }
+
+      items = escapeRenderData(items);
+      items.forEach((item, idx) => {
+        const isGrouped = state.groupByPhone && item.points;
+        const rawPhone = item.tel || item.phone_raw || "";
+        const cleanPhone = rawPhone.replace(/\D/g, "");
+        const hasPhone = (item.has_phone !== false) && cleanPhone.length >= 7;
+
+        // Mask phone if not logged in
+        let phoneDisplay = "Chưa có SĐT";
+        let carrierDisplay = "Chưa có SĐT";
+        if (hasPhone) {
+          if (isAuth) {
+            phoneDisplay = item.phone || item.phone_display || rawPhone;
+            carrierDisplay = item.carrier || "Di động";
+          } else {
+            phoneDisplay = "•••• ••• •••";
+            carrierDisplay = "🔒 Bảo mật";
+          }
+        }
+
+        const repName = isGrouped ? item.representative : item.customer_name;
+        const isContactedByMe = hasPhone && state.myContactedPhones.has(cleanPhone);
+        const uninstCnt = isGrouped ? item.uninstalled_count : (item.is_installed ? 0 : 1);
+        const totalPoints = isGrouped ? item.total_points : 1;
+        const boxId = `points-box-${idx}`;
+
+        const card = document.createElement("article");
+        // Card bo góc 16px (rounded-2xl), viền êm, padding thoải mái
+        card.className = "bg-surface-container-lowest rounded-2xl p-4 sm:p-5 border border-outline-variant shadow-xs space-y-3.5 relative overflow-hidden transition-all hover:border-primary/60 hover:shadow-md";
+
+        let tagHtml = "";
+        if (item.is_multi_station) {
+          tagHtml = `
+            <div class="inline-flex items-center space-x-1.5 bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-full font-bold text-xs sm:text-sm">
+              <span class="material-symbols-outlined text-[16px]">domain</span>
+              <span>GOM ${totalPoints} ĐIỂM ĐO (${item.stations_count} TRẠM)</span>
+            </div>`;
+        } else if (isGrouped && totalPoints > 1) {
+          tagHtml = `
+            <div class="inline-flex items-center space-x-1.5 bg-secondary-container/10 text-secondary-container px-3 py-1 rounded-full font-bold text-xs sm:text-sm">
+              <span class="material-symbols-outlined text-[16px]">hub</span>
+              <span>GOM NHÓM ${totalPoints} ĐIỂM ĐO</span>
+            </div>`;
+        } else {
+          tagHtml = `
+            <div class="inline-flex items-center space-x-1.5 bg-surface-container text-on-surface-variant px-3 py-1 rounded-full font-bold text-xs sm:text-sm">
+              <span class="material-symbols-outlined text-[16px]">person</span>
+              <span>KHÁCH HÀNG</span>
+            </div>`;
+        }
+
+        let statusPill = "";
+        if (uninstCnt === 0) {
+          const dtStr = item.installed_date ? ` (${item.installed_date})` : "";
+          statusPill = `<span class="inline-flex items-center space-x-1 bg-tertiary-fixed text-tertiary px-3 py-1 rounded-full text-xs sm:text-sm font-bold shadow-xs"><span class="material-symbols-outlined text-[15px] material-symbols-fill">check_circle</span><span>✓ Đã cài app${dtStr}</span></span>`;
+        } else if (item.installed_count > 0) {
+          statusPill = `<span class="inline-flex items-center space-x-1.5 bg-secondary-container/15 text-secondary-container border border-secondary-container/30 px-3 py-1 rounded-full text-xs sm:text-sm font-bold"><span class="w-2 h-2 rounded-full bg-secondary-container"></span><span>Đã cài ${item.installed_count}/${totalPoints} điểm</span></span>`;
+        } else {
+          statusPill = `<span class="inline-flex items-center space-x-1.5 bg-error-container text-on-error-container px-3 py-1 rounded-full text-xs sm:text-sm font-bold"><span class="w-2 h-2 rounded-full bg-error"></span><span>Chưa cài App</span></span>`;
+        }
+
+        // Sub-points collapsible list (Hiển thị chi tiết từng điểm đo ĐẦY ĐỦ, chữ to 15-16px, không bị line-clamp che giấu)
+        let subPointsHtml = "";
+        if (isAuth && isGrouped && item.points && item.points.length > 0) {
+          subPointsHtml = `
+            <div id="${boxId}" class="hidden space-y-2 bg-surface-container-low/70 p-3 sm:p-4 rounded-xl border border-outline-variant/50 mt-2 transition-all">
+              <div class="text-xs sm:text-sm font-bold text-outline uppercase tracking-wider flex items-center justify-between pb-1.5 border-b border-outline-variant/40">
+                <span class="flex items-center space-x-1.5">
+                  <span class="material-symbols-outlined text-[18px]">format_list_bulleted</span>
+                  <span>${item.points.length} điểm đo thuộc thuê bao:</span>
+                </span>
+                <button type="button" class="btn-close-box text-primary font-bold text-xs sm:text-sm flex items-center space-x-0.5 hover:underline cursor-pointer" data-target="${boxId}">
+                  <span>Thu gọn</span>
+                  <span class="material-symbols-outlined text-[18px]">expand_less</span>
+                </button>
+              </div>
+              ${item.points.map(pt => {
+                const ptName = pt.customer_name || pt.TEN_KHANG || ("Khách hàng " + pt.customer_id);
+                const ptDateBadge = pt.is_installed
+                  ? `<span class="text-xs shrink-0 font-bold px-2.5 py-1 rounded-full text-tertiary bg-tertiary-fixed/70 flex items-center space-x-1"><span>✓ Đã cài app</span><span class="font-normal text-[11px] text-tertiary/90">${pt.installed_date ? ' (' + pt.installed_date + ')' : ''}</span></span>`
+                  : `<span class="text-xs shrink-0 font-bold px-2.5 py-1 rounded-full text-error bg-error-container/60">Chưa cài app</span>`;
+                const curStId = state.currentStation ? state.currentStation.station_id : "";
+                const isCurStation = !curStId || pt.station_id === curStId;
+                const stationBadge = (item.is_multi_station && pt.station_name)
+                  ? `<span class="text-xs font-bold px-2 py-0.5 rounded ${isCurStation ? 'bg-primary/10 text-primary' : 'bg-secondary-container/15 text-secondary-container border border-secondary-container/20'}">${isCurStation ? 'Trạm này: ' : 'Trạm khác: '}${pt.station_name}</span>`
+                  : '';
+                return `
+                <div class="bg-surface-container-lowest p-3 sm:p-3.5 rounded-xl border border-outline-variant/60 flex items-start justify-between gap-3 shadow-xs">
+                  <div class="space-y-1 min-w-0 flex-1">
+                    <div class="flex items-center space-x-2 flex-wrap gap-y-1">
+                      <span class="text-sm sm:text-base font-extrabold text-primary font-mono">${pt.customer_id}</span>
+                      <span class="text-xs bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-semibold">${pt.purpose}</span>
+                      ${stationBadge}
+                    </div>
+                    <p class="text-base sm:text-lg font-bold text-on-surface flex items-center space-x-1.5 pt-0.5">
+                      <span class="material-symbols-outlined text-[18px] text-primary">person</span>
+                      <span>${ptName}</span>
+                    </p>
+                    <p class="text-sm sm:text-base text-on-surface-variant leading-relaxed">📍 <span class="font-medium">${pt.address}</span></p>
+                    <p class="text-xs sm:text-sm text-outline font-mono pt-0.5">Công tơ: <strong class="text-on-surface font-bold">${pt.meter_code}</strong> · Cột: <strong class="text-primary font-bold">${pt.pole_no || '--'}</strong>${pt.gcs_book && pt.gcs_book !== '--' ? ` · Sổ: <span class="text-on-surface font-semibold">${pt.gcs_book}</span>` : ''}</p>
+                  </div>
+                  ${ptDateBadge}
+                </div>
+              `;}).join('')}
+            </div>`;
+        } else if (isAuth && !isGrouped) {
+          subPointsHtml = `
+            <div id="${boxId}" class="hidden text-sm text-outline space-y-1.5 bg-surface-container-low/50 p-3 sm:p-4 rounded-xl border border-outline-variant/50 mt-2 transition-all">
+              <div class="flex items-center justify-between pb-1 border-b border-outline-variant/30">
+                <span class="text-xs sm:text-sm font-bold text-outline uppercase">Chi tiết điểm đo</span>
+                <button type="button" class="btn-close-box text-primary font-bold text-xs sm:text-sm flex items-center space-x-0.5 hover:underline cursor-pointer" data-target="${boxId}">
+                  <span>Thu gọn</span>
+                  <span class="material-symbols-outlined text-[18px]">expand_less</span>
+                </button>
+              </div>
+              <p class="text-base font-bold text-on-surface flex items-center space-x-1.5">
+                <span class="material-symbols-outlined text-[18px] text-outline">person</span>
+                <span>${item.customer_name}</span>
+              </p>
+              <p>Mã KH: <span class="font-mono text-primary font-extrabold text-base">${item.customer_id}</span> · Loại: <span class="text-on-surface font-semibold">${item.purpose}</span></p>
+              <p class="leading-relaxed">📍 Địa chỉ: <span class="text-on-surface font-semibold">${item.address}</span></p>
+              <p class="font-mono">Công tơ: <strong class="text-on-surface font-bold">${item.meter_code}</strong> · Số cột: <strong class="text-primary font-bold">${item.pole_no || '--'}</strong>${item.gcs_book && item.gcs_book !== '--' ? ` · Sổ: <span class="text-on-surface font-semibold">${item.gcs_book}</span>` : ''}</p>
+              <p class="pt-1">Trạng thái: <span class="font-bold ${item.is_installed ? 'text-tertiary' : 'text-error'}">${item.is_installed ? '✓ Đã cài app' + (item.installed_date ? ' (' + item.installed_date + ')' : '') : 'Chưa cài app'}</span></p>
+            </div>`;
+        } else {
+          subPointsHtml = `<div id="${boxId}" class="hidden"></div>`;
+        }
+
+        // Toggle points button (Rộng rãi, dễ bấm)
+        let toggleLineHtml = "";
+        if (!isAuth) {
+          toggleLineHtml = `
+            <div class="btn-toggle-points mt-2.5 p-2.5 bg-surface-container-low hover:bg-surface-container rounded-xl border border-outline-variant/50 text-xs sm:text-sm flex items-center justify-between text-on-surface-variant cursor-pointer active:scale-[0.99] transition-all select-none" data-target="${boxId}">
+              <span class="flex items-center space-x-2 min-w-0 pr-1 text-outline">
+                <span class="material-symbols-outlined text-[18px] text-outline shrink-0">lock</span>
+                <span>Mã KH: <strong class="font-mono text-outline font-bold">••••••••••</strong> (${totalPoints} điểm đo)</span>
+              </span>
+              <span class="flex items-center space-x-1 text-primary font-bold text-xs sm:text-sm shrink-0">
+                <span>Đăng nhập để xem</span>
+                <span class="material-symbols-outlined text-[18px]">lock</span>
+              </span>
+            </div>
+          `;
+        } else if (item.is_multi_station) {
+          toggleLineHtml = `
+            <div class="btn-toggle-points mt-2.5 p-2.5 bg-primary/5 hover:bg-primary/10 rounded-xl border border-primary/20 text-xs sm:text-sm flex items-center justify-between text-on-surface-variant cursor-pointer active:scale-[0.99] transition-all select-none" data-target="${boxId}">
+              <span class="flex items-center space-x-2 min-w-0 pr-1">
+                <span class="material-symbols-outlined text-[18px] text-primary shrink-0">domain</span>
+                <span>Số này có <strong>${totalPoints}</strong> điểm đo tại <strong>${item.stations_count}</strong> trạm</span>
+              </span>
+              <span class="flex items-center space-x-1 text-primary font-bold shrink-0">
+                <span class="font-mono text-xs sm:text-sm">Trạm này: ${item.current_station_points || 1} · Khác: ${item.other_stations_points || 0}</span>
+                <span class="material-symbols-outlined text-[20px] transition-transform duration-200 arrow-icon">expand_more</span>
+              </span>
+            </div>
+          `;
+        } else if (totalPoints > 1) {
+          toggleLineHtml = `
+            <div class="btn-toggle-points mt-2.5 p-2.5 bg-surface-container-low/70 hover:bg-surface-container-low rounded-xl border border-outline-variant/40 text-xs sm:text-sm flex items-center justify-between text-on-surface-variant cursor-pointer active:scale-[0.99] transition-all select-none" data-target="${boxId}">
+              <span class="flex items-center space-x-2 min-w-0 pr-1">
+                <span class="material-symbols-outlined text-[18px] text-primary shrink-0">hub</span>
+                <span>Số này gồm <strong>${totalPoints}</strong> điểm đo thuộc trạm</span>
+              </span>
+              <span class="flex items-center space-x-1 text-primary font-bold text-xs sm:text-sm shrink-0">
+                <span>Xem chi tiết</span>
+                <span class="material-symbols-outlined text-[20px] transition-transform duration-200 arrow-icon">expand_more</span>
+              </span>
+            </div>
+          `;
+        } else {
+          toggleLineHtml = `
+            <div class="btn-toggle-points mt-2 p-2 bg-surface-container-low/40 hover:bg-surface-container-low rounded-xl border border-outline-variant/30 text-xs sm:text-sm flex items-center justify-between text-outline cursor-pointer active:scale-[0.99] transition-all select-none" data-target="${boxId}">
+              <span class="flex items-center space-x-1.5 min-w-0 pr-1">
+                <span class="material-symbols-outlined text-[16px] text-outline shrink-0">electric_meter</span>
+                <span class="truncate">Mã KH: <strong class="font-mono text-primary font-bold">${item.customer_id || (item.points && item.points[0] ? item.points[0].customer_id : '')}</strong></span>
+              </span>
+              <span class="flex items-center space-x-1 text-primary font-bold text-xs sm:text-sm shrink-0">
+                <span>Chi tiết điểm đo</span>
+                <span class="material-symbols-outlined text-[20px] transition-transform duration-200 arrow-icon">expand_more</span>
+              </span>
+            </div>
+          `;
+        }
+
+        // Action button (Call button) & Footer trạng thái
+        let actionBtnHtml = "";
+        let contactStatusFooter = "";
+
+        if (!hasPhone) {
+          actionBtnHtml = `
+            <div class="w-full h-14 bg-surface-container text-outline rounded-2xl font-bold text-sm flex items-center justify-center space-x-2 border border-outline-variant/40 cursor-not-allowed">
+              <span class="material-symbols-outlined text-[22px]">phone_disabled</span>
+              <span>CHƯA CÓ SỐ ĐIỆN THOẠI ĐỂ GỌI</span>
+            </div>`;
+          contactStatusFooter = `
+            <div class="pt-1 flex items-center justify-between text-xs sm:text-sm text-outline">
+              <span class="flex items-center space-x-1"><span class="material-symbols-outlined text-[16px]">info</span><span>Khách hàng chưa có SĐT trên hệ thống</span></span>
+              <span>Không thể gọi</span>
+            </div>`;
+        } else if (!isAuth) {
+          actionBtnHtml = `
+            <button class="btn-call-action w-full h-14 bg-surface-container-high text-on-surface hover:bg-surface-container-highest active:scale-[0.98] rounded-2xl font-bold text-base flex items-center justify-center space-x-2 border border-outline-variant/60 shadow-xs transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-[22px] text-primary">lock</span>
+              <span>ĐĂNG NHẬP ĐỂ GỌI ĐIỆN</span>
+            </button>`;
+          contactStatusFooter = `
+            <div class="pt-1 flex items-center justify-between text-xs sm:text-sm text-outline">
+              <span class="flex items-center space-x-1.5">
+                <span class="material-symbols-outlined text-[16px]">lock</span>
+                <span>Số điện thoại & mã KH được bảo mật</span>
+              </span>
+              <span class="font-bold text-primary cursor-pointer hover:underline" onclick="openLoginModal()">Đăng nhập ngay</span>
+            </div>`;
+        } else {
+          // Logged in: NÚT GỌI CAO 56PX (H-14), FONT 17PX (TEXT-BASE/LG), ICON 26PX BẤM CỰC SƯỚNG TAY
+          actionBtnHtml = `
+            <button data-phone="${rawPhone}" data-rep="${repName}" data-station="${item.station_id || (state.currentStation ? state.currentStation.station_id : '')}" class="btn-call-action w-full h-14 bg-primary-container text-on-primary hover:bg-primary active:scale-[0.98] rounded-2xl font-bold text-base sm:text-lg flex items-center justify-center space-x-2.5 shadow-md shadow-primary/20 transition-all cursor-pointer">
+              <span class="material-symbols-outlined text-[26px] material-symbols-fill">call</span>
+              <span>GỌI NGAY CHO KHÁCH HÀNG</span>
+            </button>`;
+
+          if (isContactedByMe) {
+            const callInfo = state.myContactedPhones.get(cleanPhone) || {status: "Đã gọi", note: "", time: ""};
+            const statusColors = {"Đã gọi": "tertiary", "Không nghe máy": "amber-500", "Không tin": "red-400"};
+            const statusIcons = {"Đã gọi": "check_circle", "Không nghe máy": "phone_missed", "Không tin": "warning"};
+            const isCustom = !statusColors[callInfo.status];
+            const sColor = isCustom ? "blue-500" : statusColors[callInfo.status];
+            const sIcon = isCustom ? "edit_note" : statusIcons[callInfo.status];
+            const displayStatus = callInfo.note && callInfo.note !== callInfo.status ? callInfo.note : callInfo.status;
+            const timeStr = callInfo.time ? ` — ${callInfo.time}` : "";
+            contactStatusFooter = `
+              <div class="pt-1">
+                <div class="w-full py-3 px-3.5 rounded-xl bg-tertiary-fixed/30 border border-tertiary/40 text-on-surface flex items-center justify-between text-xs sm:text-sm font-bold shadow-xs">
+                  <span class="flex items-center space-x-2 min-w-0">
+                    <span class="material-symbols-outlined text-[20px] text-${sColor} material-symbols-fill shrink-0">${sIcon}</span>
+                    <span class="truncate">${escapeHtml(displayStatus)}${timeStr}</span>
+                  </span>
+                  <button data-phone="${rawPhone}" class="btn-unmark-called text-error hover:underline font-bold flex items-center space-x-1 cursor-pointer shrink-0 ml-2">
+                    <span class="material-symbols-outlined text-[16px]">undo</span>
+                    <span>Bỏ</span>
+                  </button>
+                </div>
+              </div>`;
+          } else {
+            contactStatusFooter = `
+              <div class="pt-1">
+                <button data-phone="${rawPhone}" data-rep="${repName}" class="btn-mark-called w-full py-3 px-3.5 rounded-xl border border-outline-variant bg-surface-container-low hover:bg-tertiary-fixed/30 hover:border-tertiary text-on-surface-variant flex items-center justify-between text-xs sm:text-sm font-semibold transition-all cursor-pointer active:scale-98">
+                  <span class="flex items-center space-x-2">
+                    <span class="material-symbols-outlined text-[20px] text-outline">check_box_outline_blank</span>
+                    <span>Tích vào đây khi đã gọi xong</span>
+                  </span>
+                  <span class="text-xs sm:text-sm text-tertiary font-bold flex items-center space-x-1">
+                    <span>Chuyển sang Đã liên hệ</span>
+                    <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                  </span>
+                </button>
+              </div>`;
+          }
+        }
+
+        const copyBtnHtml = hasPhone
+          ? (isAuth
+              ? `<button data-copy="${rawPhone}" class="btn-copy-phone w-11 h-11 rounded-xl bg-surface-container-low text-primary flex items-center justify-center hover:bg-surface-container active:scale-90 cursor-pointer border border-outline-variant/30 transition-all shadow-xs shrink-0" title="Sao chép SĐT">
+                   <span class="material-symbols-outlined text-[20px]">content_copy</span>
+                 </button>`
+              : `<button class="btn-copy-phone-locked w-11 h-11 rounded-xl bg-surface-container-low text-outline flex items-center justify-center hover:bg-surface-container active:scale-90 cursor-pointer border border-outline-variant/30 transition-all shadow-xs shrink-0" title="Đăng nhập để xem & sao chép SĐT">
+                   <span class="material-symbols-outlined text-[20px]">lock</span>
+                 </button>`)
+          : "";
+
+        let stationHeaderHtml = "";
+        if (item.is_global_result && item.station_name) {
+          stationHeaderHtml = `
+            <div class="flex items-center justify-between pb-2.5 mb-1 border-b border-outline-variant/40 bg-surface-container-low/70 -mx-4 sm:-mx-5 -mt-4 sm:-mt-5 px-4 sm:px-5 pt-3 pb-2.5 rounded-t-2xl">
+              <span class="inline-flex items-center space-x-1.5 font-bold text-primary text-xs sm:text-sm truncate mr-2">
+                <span class="material-symbols-outlined text-[18px]">electrical_services</span>
+                <span class="truncate">Trạm: <strong>${escapeHtml(item.station_name)}</strong> <span class="font-mono text-outline font-normal">(${escapeHtml(item.station_id)})</span></span>
+              </span>
+              <button type="button" onclick="switchToStation('${escapeHtml(item.station_id)}')" class="shrink-0 px-2.5 py-1 rounded-lg bg-surface-container-lowest border border-primary/30 text-primary hover:bg-primary hover:text-on-primary font-bold inline-flex items-center space-x-1 text-xs shadow-xs transition-all cursor-pointer" title="Chuyển sang xem trạm này">
+                <span>Mở trạm</span>
+                <span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+              </button>
+            </div>
+          `;
+        }
+
+        let primaryAddress = "";
+        let primaryPole = "--";
+        let primaryMeter = "--";
+        if (item.points && item.points.length > 0) {
+          const pt0 = item.points[0];
+          primaryAddress = pt0.address || item.address || "";
+          primaryPole = pt0.pole_no || item.pole_no || "--";
+          primaryMeter = pt0.meter_code || item.meter_code || "--";
+        } else {
+          primaryAddress = item.address || "";
+          primaryPole = item.pole_no || "--";
+          primaryMeter = item.meter_code || "--";
+        }
+
+        let fieldInfoLine = "";
+        if (isAuth) {
+          fieldInfoLine = `
+            <div class="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs sm:text-sm">
+              ${primaryAddress ? `
+                <span class="inline-flex items-center space-x-1 font-medium text-on-surface-variant truncate max-w-[280px] sm:max-w-md" title="${escapeHtml(primaryAddress)}">
+                  <span class="material-symbols-outlined text-[16px] text-primary shrink-0">location_on</span>
+                  <span class="truncate">${escapeHtml(primaryAddress)}</span>
+                </span>
+              ` : ''}
+              <span class="inline-flex items-center space-x-1.5 text-outline font-mono text-xs bg-surface-container-low px-2 py-0.5 rounded-lg border border-outline-variant/40">
+                <span class="font-semibold text-primary">Cột: <strong class="text-on-surface font-bold">${escapeHtml(primaryPole)}</strong></span>
+                <span>·</span>
+                <span>Công tơ: <strong class="text-on-surface font-bold">${escapeHtml(primaryMeter)}</strong></span>
+              </span>
+            </div>`;
+        } else {
+          fieldInfoLine = `
+            <div class="mt-1.5 inline-flex items-center space-x-1.5 text-xs text-outline font-medium">
+              <span class="material-symbols-outlined text-[15px] text-outline">lock</span>
+              <span>Địa chỉ, số cột & công tơ được bảo mật</span>
+            </div>`;
+        }
+
+        card.innerHTML = `
+          ${stationHeaderHtml}
+          <div class="flex items-center justify-between pb-2.5 border-b border-outline-variant/50">
+            ${tagHtml}
+            ${statusPill}
+          </div>
+
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center space-x-2.5 flex-wrap">
+                <!-- SỐ ĐIỆN THOẠI TO RÕ VƯỢT TRỘI 24PX - 28PX -->
+                <span class="text-2xl sm:text-3xl font-extrabold text-primary tracking-wide font-mono leading-none">${phoneDisplay}</span>
+                <span class="text-xs font-bold bg-surface-container text-on-surface-variant px-2 py-0.5 rounded uppercase">${carrierDisplay}</span>
+              </div>
+              <!-- TÊN CHỦ HỘ / ĐẠI DIỆN TO RÕ 18PX (TEXT-LG) -->
+              <p class="text-lg sm:text-xl font-bold text-on-surface mt-1.5 leading-snug">${repName}</p>
+              ${fieldInfoLine}
+              ${toggleLineHtml}
+            </div>
+            ${copyBtnHtml}
+          </div>
+
+          ${subPointsHtml}
+
+          <!-- ONE-TOUCH PRIMARY CALL BUTTON -->
+          ${actionBtnHtml}
+
+          <!-- CONTACTED STATUS & TOGGLE CHECKBOX -->
+          ${contactStatusFooter}
+        `;
+
+        container.appendChild(card);
+      });
+
+      // Bind events
+      document.querySelectorAll(".btn-toggle-points").forEach(btn => {
+        btn.onclick = (e) => {
+          e.preventDefault();
+          const targetId = btn.getAttribute("data-target");
+          togglePointsBox(targetId);
+        };
+      });
+
+      document.querySelectorAll(".btn-close-box").forEach(btn => {
+        btn.onclick = (e) => {
+          e.preventDefault();
+          const targetId = btn.getAttribute("data-target");
+          togglePointsBox(targetId);
+        };
+      });
+
+      document.querySelectorAll(".btn-copy-phone").forEach(b => {
+        b.onclick = (e) => {
+          e.preventDefault();
+          const p = b.getAttribute("data-copy");
+          navigator.clipboard.writeText(p);
+          showToast("Đã sao chép SĐT: " + p, "info");
+        };
+      });
+
+      document.querySelectorAll(".btn-copy-phone-locked").forEach(b => {
+        b.onclick = (e) => {
+          e.preventDefault();
+          openLoginModal("Vui lòng đăng nhập để xem và sao chép số điện thoại!");
+        };
+      });
+
+      document.querySelectorAll(".btn-call-action").forEach(btn => {
+        btn.onclick = () => {
+          const phone = btn.getAttribute("data-phone");
+          const rep = btn.getAttribute("data-rep");
+          const station = btn.getAttribute("data-station");
+          handleCallAction(phone, rep, station);
+        };
+      });
+
+      document.querySelectorAll(".btn-mark-called").forEach(btn => {
+        btn.onclick = () => {
+          const phone = btn.getAttribute("data-phone");
+          const rep = btn.getAttribute("data-rep");
+          state.lastDialedPhone = phone;
+          state.lastDialedRep = rep;
+          document.getElementById("modal-phone-number").textContent = formatPhoneDisplayClient(phone);
+          document.getElementById("modal-rep-name").textContent = rep || "Khách hàng";
+          document.getElementById("call-status-custom-wrap").classList.add("hidden");
+          document.getElementById("call-confirm-modal").classList.remove("hidden");
+        };
+      });
+
+      document.querySelectorAll(".btn-unmark-called").forEach(btn => {
+        btn.onclick = () => {
+          const phone = btn.getAttribute("data-phone");
+          handleUnmarkCalled(phone);
+        };
+      });
+    }
+
+    // Direct One-Touch Calling
+    async function handleCallAction(phone, repName, stationId) {
+      if (!state.authToken || !state.currentUser) {
+        openLoginModal("Vui lòng đăng nhập tài khoản cán bộ để gọi điện cho khách hàng!");
+        return;
+      }
+
+      if (!await refreshSession()) { await fetchCustomers(); openLoginModal(); return; }
+      if (!/^\+?\d{7,15}$/.test(String(phone))) return;
+      state.lastDialedPhone = phone;
+      state.lastDialedRep = repName;
+      state.lastDialedStation = stationId;
+
+      window.location.href = "tel:" + phone;
+    }
+
+    // Mark called (Chuyển sang Đã liên hệ)
+    async function handleMarkCalled(phone, repName, callStatus, callNote) {
+      if (!state.authToken || !state.currentUser) {
+        openLoginModal("Vui lòng đăng nhập tài khoản cán bộ để ghi nhận cuộc gọi!");
+        return;
+      }
+
+      if (!await refreshSession()) { await fetchCustomers(); openLoginModal(); return; }
+      const cleanP = String(phone || "").replace(/\D/g, "");
+      if (!cleanP) return;
+
+      const now = new Date();
+      const timeStr = now.toLocaleString("vi-VN", {hour12: false, day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit"});
+      state.myContactedPhones.set(cleanP, {status: callStatus || "Đã gọi", note: callNote || "", time: timeStr});
+      if (!saveOfficerContacted()) { loadOfficerContacted(); return; }
+
+      showToast(`✓ Đã chuyển số ${formatPhoneDisplayClient(cleanP)} sang mục "Đã gọi" — ${callStatus || "Đã gọi"}`, "success");
+      await fetchCustomers();
+      renderCallLogsView();
+    }
+
+    // Unmark called (Bỏ đánh dấu -> quay lại Chưa gọi)
+    async function handleUnmarkCalled(phone) {
+      if (!state.authToken || !state.currentUser) return;
+      if (!await refreshSession()) { await fetchCustomers(); openLoginModal(); return; }
+      const cleanP = String(phone || "").replace(/\D/g, "");
+      if (!cleanP) return;
+
+      state.myContactedPhones.delete(cleanP);
+      if (!saveOfficerContacted()) { loadOfficerContacted(); return; }
+
+      showToast(`Đã chuyển lại số ${formatPhoneDisplayClient(cleanP)} sang mục "Chưa gọi"`, "info");
+      await fetchCustomers();
+      renderCallLogsView();
+    }
+
+    // Check when user returns to web page after native dialer call
+    window.addEventListener("focus", async () => {
+      if (state.currentUser && !await refreshSession()) { await fetchCustomers(); renderCallLogsView(); return; }
+      if (state.lastDialedPhone && state.currentUser) {
+        const p = state.lastDialedPhone;
+        const rep = state.lastDialedRep || "Khách hàng";
+        document.getElementById("modal-phone-number").textContent = formatPhoneDisplayClient(p);
+        document.getElementById("modal-rep-name").textContent = rep;
+        document.getElementById("call-status-custom-wrap").classList.add("hidden");
+        document.getElementById("call-confirm-modal").classList.remove("hidden");
+      }
+    });
+
+    // Call status modal: handle status button clicks
+    document.querySelectorAll("#call-status-options .call-status-btn").forEach(btn => {
+      btn.onclick = async () => {
+        const status = btn.getAttribute("data-call-status");
+        if (status === "other") {
+          document.getElementById("call-status-custom-wrap").classList.remove("hidden");
+          document.getElementById("call-status-custom-input").value = "";
+          document.getElementById("call-status-custom-input").focus();
+          return;
+        }
+        if (!state.lastDialedPhone) {
+          document.getElementById("call-confirm-modal").classList.add("hidden");
+          return;
+        }
+        const p = state.lastDialedPhone;
+        const rep = state.lastDialedRep;
+        state.lastDialedPhone = null;
+        state.lastDialedRep = null;
+        document.getElementById("call-confirm-modal").classList.add("hidden");
+        document.getElementById("call-status-custom-wrap").classList.add("hidden");
+        await handleMarkCalled(p, rep, status, "");
+      };
+    });
+
+    // Custom note confirm
+    document.getElementById("call-status-custom-confirm").onclick = async () => {
+      const note = (document.getElementById("call-status-custom-input").value || "").trim();
+      if (!note) { document.getElementById("call-status-custom-input").focus(); return; }
+      if (!state.lastDialedPhone) {
+        document.getElementById("call-confirm-modal").classList.add("hidden");
+        return;
+      }
+      const p = state.lastDialedPhone;
+      const rep = state.lastDialedRep;
+      state.lastDialedPhone = null;
+      state.lastDialedRep = null;
+      document.getElementById("call-confirm-modal").classList.add("hidden");
+      document.getElementById("call-status-custom-wrap").classList.add("hidden");
+      await handleMarkCalled(p, rep, note, note);
+    };
+
+    // Dismiss call popup
+    document.getElementById("modal-btn-cancel").onclick = () => {
+      state.lastDialedPhone = null;
+      state.lastDialedRep = null;
+      document.getElementById("call-confirm-modal").classList.add("hidden");
+      document.getElementById("call-status-custom-wrap").classList.add("hidden");
+    };
+
+    function formatPhoneDisplayClient(phone) {
+      const clean = String(phone || "").replace(/\D/g, "");
+      if (clean.length === 10) {
+        return clean.replace(/(\d{4})(\d{3})(\d{3})/, "$1 $2 $3");
+      } else if (clean.length === 11) {
+        return clean.replace(/(\d{3})(\d{4})(\d{4})/, "$1 $2 $3");
+      }
+      return clean || phone;
+    }
+
+    // Render Station Header
+    function renderCurrentStationHeader() {
+      if (!state.currentStation) return;
+      const s = state.currentStation;
+      addRecentStation(s);
+      const txt = `${s.station_name} (${s.station_id})`;
+      const curHeader = document.getElementById("current-station-name");
+      if (curHeader) curHeader.textContent = txt;
+      
+      const cardName = document.getElementById("card-station-name");
+      if (cardName) cardName.textContent = txt;
+      
+      const badgeUninst = document.getElementById("station-badge-uninstalled");
+      if (badgeUninst) badgeUninst.textContent = `${s.uninstalled_count} chưa cài`;
+    }
+
+    // Render Stations View (Tiến độ 707 trạm với Mini Progress Bar & Sắp xếp linh hoạt)
+    function renderStationsView() {
+      const container = document.getElementById("stations-list-container");
+      container.innerHTML = "";
+      
+      const filtered = getFilteredAndSortedStations(state.stationQuery, state.stationSort);
+      
+      const countBadge = document.getElementById("stations-count-badge");
+      const countSub = document.getElementById("stations-count-subtitle");
+      if (countBadge) countBadge.textContent = `${filtered.length} trạm`;
+      if (countSub) {
+        if (state.stationQuery) {
+          countSub.textContent = `Tìm thấy ${filtered.length} / ${state.stations.length} trạm khớp từ khóa`;
+        } else {
+          countSub.textContent = `Đầy đủ 707 trạm thuộc Điện lực Tiền Hải`;
+        }
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center text-outline bg-surface-container-lowest rounded-2xl border border-outline-variant p-6">
+            <span class="material-symbols-outlined text-5xl mb-2 text-outline">search_off</span>
+            <p class="font-bold text-on-surface text-base">Không tìm thấy trạm điện nào</p>
+            <p class="text-xs sm:text-sm mt-1">Gõ thử từ khóa khác (ví dụ: nam hai, dong hai, 0300...)</p>
+          </div>`;
+        return;
+      }
+
+      filtered.forEach(s => {
+        const item = document.createElement("div");
+        const isCurrent = state.currentStation && state.currentStation.station_id === s.station_id;
+        const rate = s.installed_rate || 0;
+        const rateColor = rate >= 65 ? "text-tertiary" : (rate >= 40 ? "text-secondary-container" : "text-error");
+        const barBg = rate >= 65 ? "bg-tertiary-container" : (rate >= 40 ? "bg-secondary-container" : "bg-error");
+
+        item.className = `p-4 bg-surface-container-lowest border rounded-2xl flex flex-col justify-between gap-3 cursor-pointer hover:border-primary active:scale-[0.99] transition-all shadow-xs ${isCurrent ? 'border-primary ring-2 ring-primary/20 bg-primary/5' : 'border-outline-variant'}`;
+        item.onclick = () => {
+          state.currentStation = s;
+          state.page = 1;
+          renderCurrentStationHeader();
+          switchNav("customers");
+          fetchCustomers();
+        };
+
+        item.innerHTML = `
+          <div class="space-y-1.5 min-w-0 flex-1">
+            <div class="flex items-center space-x-2 flex-wrap">
+              <span class="text-base font-bold text-primary">${s.station_name}</span>
+              ${isCurrent ? '<span class="bg-primary text-on-primary text-xs font-bold px-2 py-0.2 rounded-full">Đang xem</span>' : ''}
+            </div>
+            <p class="text-xs sm:text-sm text-outline font-mono">${s.station_id} · Tổng: <strong class="text-on-surface">${s.total_customers.toLocaleString()}</strong> hộ</p>
+            
+            <!-- Mini Progress Bar -->
+            <div class="w-full bg-surface-container-high h-2.5 rounded-full overflow-hidden mt-1.5">
+              <div class="${barBg} h-full rounded-full transition-all duration-500" style="width: ${Math.min(100, rate)}%"></div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between shrink-0 pt-2 border-t border-outline-variant/40">
+            <span class="text-lg font-extrabold ${rateColor} num">${rate}%</span>
+            <p class="text-xs sm:text-sm text-outline num font-medium">
+              <span class="text-tertiary font-bold">${s.installed_count} đã cài</span> / <span class="text-secondary-container font-bold">${s.uninstalled_count} chưa</span>
+            </p>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // Navigation Switcher (ĐỒNG BỘ CẢ BOTTOM BAR VÀ DESKTOP TOP BAR)
+    function switchNav(target) {
+      ["customers", "stations", "call-logs", "reports"].forEach(id => {
+        const el = document.getElementById(`view-${id}`);
+        if (el) el.classList.add("hidden");
+      });
+      const targetEl = document.getElementById(`view-${target}`);
+      if (targetEl) targetEl.classList.remove("hidden");
+
+      // Đồng bộ mobile bottom nav
+      document.querySelectorAll(".nav-item").forEach(btn => {
+        const isCurrent = btn.getAttribute("data-nav") === target;
+        btn.className = isCurrent 
+          ? "nav-item flex-1 flex flex-col items-center justify-center py-1 text-primary"
+          : "nav-item flex-1 flex flex-col items-center justify-center py-1 text-outline hover:text-primary";
+        const icon = btn.querySelector(".material-symbols-outlined");
+        if (icon) {
+          if (isCurrent) icon.classList.add("material-symbols-fill");
+          else icon.classList.remove("material-symbols-fill");
+        }
+      });
+
+      // Đồng bộ desktop top nav
+      document.querySelectorAll(".desktop-nav-item").forEach(btn => {
+        const isCurrent = btn.getAttribute("data-desktop-nav") === target;
+        btn.className = isCurrent 
+          ? "desktop-nav-item px-3.5 lg:px-4 py-2 rounded-xl text-sm font-bold flex items-center space-x-1.5 transition-all text-primary bg-surface-container-lowest shadow-xs"
+          : "desktop-nav-item px-3.5 lg:px-4 py-2 rounded-xl text-sm font-semibold flex items-center space-x-1.5 transition-all text-outline hover:text-primary hover:bg-surface-container-lowest/60";
+        const icon = btn.querySelector(".material-symbols-outlined");
+        if (icon) {
+          if (isCurrent) icon.classList.add("material-symbols-fill");
+          else icon.classList.remove("material-symbols-fill");
+        }
+      });
+
+      if (target === "call-logs") {
+        renderCallLogsView();
+      }
+    }
+
+    function renderCallLogsView() {
+      const container = document.getElementById("call-logs-container");
+      container.innerHTML = "";
+
+      const isAuth = !!(state.currentUser && state.authToken);
+      if (!isAuth) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center text-outline bg-surface-container-lowest rounded-2xl border border-outline-variant p-6 space-y-3.5">
+            <span class="material-symbols-outlined text-4xl text-primary">lock</span>
+            <p class="font-bold text-on-surface text-base">Mục này yêu cầu đăng nhập</p>
+            <p class="text-sm">Vui lòng đăng nhập tài khoản cán bộ để xem danh sách khách hàng bạn đã liên hệ.</p>
+            <button onclick="openLoginModal()" class="px-5 py-2.5 bg-primary text-on-primary rounded-xl font-bold text-sm shadow-md cursor-pointer hover:bg-primary-container">Đăng nhập ngay</button>
+          </div>`;
+        return;
+      }
+
+      const phones = Array.from(state.myContactedPhones.entries());
+      if (phones.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full p-10 text-center text-outline bg-surface-container-lowest rounded-2xl border border-outline-variant space-y-2">
+            <span class="material-symbols-outlined text-4xl text-outline mb-1">call_end</span>
+            <p class="font-bold text-on-surface text-base">Chưa có số điện thoại nào trong mục Đã liên hệ</p>
+            <p class="text-xs sm:text-sm">Khi bạn gọi xong và tích vào nút "Đã gọi", các số sẽ xuất hiện tại đây.</p>
+          </div>`;
+        return;
+      }
+
+      phones.forEach(([p, info]) => {
+        const statusColors = {"Đã gọi": "tertiary", "Không nghe máy": "amber-500", "Không tin": "red-400"};
+        const statusIcons = {"Đã gọi": "check_circle", "Không nghe máy": "phone_missed", "Không tin": "warning"};
+        const isCustom = !statusColors[info.status];
+        const sColor = isCustom ? "blue-500" : statusColors[info.status];
+        const sIcon = isCustom ? "edit_note" : statusIcons[info.status];
+        const displayStatus = info.note && info.note !== info.status ? info.note : info.status;
+        const timeStr = info.time ? `<span class="text-outline font-normal ml-1">${escapeHtml(info.time)}</span>` : "";
+        const row = document.createElement("div");
+        row.className = "p-4 bg-surface-container-lowest rounded-2xl border border-outline-variant flex items-center justify-between shadow-xs";
+        row.innerHTML = `
+          <div class="flex items-center space-x-3 min-w-0">
+            <span class="material-symbols-outlined text-${sColor} material-symbols-fill text-[24px] shrink-0">${sIcon}</span>
+            <div class="min-w-0">
+              <span class="font-mono font-bold text-base sm:text-lg text-primary">${formatPhoneDisplayClient(p)}</span>
+              <p class="text-xs font-bold text-on-surface-variant truncate">${escapeHtml(displayStatus)}${timeStr}</p>
+              <p class="text-xs text-outline font-medium">Bởi ${escapeHtml(state.currentUser.officer_name || state.currentUser.username)}</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2 shrink-0">
+            <button data-call-again="${p}" class="h-10 px-3.5 rounded-xl bg-primary-container text-on-primary text-xs sm:text-sm font-bold flex items-center space-x-1 shadow-xs hover:bg-primary active:scale-95 cursor-pointer">
+              <span class="material-symbols-outlined text-[18px]">call</span>
+              <span>Gọi lại</span>
+            </button>
+            <button data-remove-phone="${p}" class="h-10 px-3 rounded-xl border border-outline-variant text-xs sm:text-sm text-error hover:bg-error-container/20 font-semibold flex items-center space-x-0.5 cursor-pointer">
+              <span>Bỏ</span>
+            </button>
+          </div>`;
+        container.appendChild(row);
+      });
+
+      container.querySelectorAll("[data-call-again]").forEach(btn => {
+        btn.onclick = () => handleCallAction(btn.getAttribute("data-call-again"), "Khách hàng", "");
+      });
+      container.querySelectorAll("[data-remove-phone]").forEach(btn => {
+        btn.onclick = () => {
+          const p = btn.getAttribute("data-remove-phone");
+          handleUnmarkCalled(p);
+          renderCallLogsView();
+        };
+      });
+    }
+
+    // Modal Picker Stations
+    async function openStationModal() {
+      const modal = document.getElementById("station-picker-modal");
+      if (!modal) return;
+      modal.classList.remove("hidden");
+      renderRecentStationsModal();
+      const input = document.getElementById("input-modal-station-search");
+      if (input) {
+        input.value = state.modalQuery || "";
+        setTimeout(() => input.focus(), 80);
+      }
+      const clearBtn = document.getElementById("btn-clear-modal-station");
+      if (clearBtn) clearBtn.classList.toggle("hidden", !state.modalQuery);
+
+      if (!state.stations || state.stations.length === 0) {
+        await fetchStations();
+      }
+      renderModalStations();
+    }
+
+    function closeStationModal() {
+      document.getElementById("station-picker-modal").classList.add("hidden");
+    }
+
+    function renderModalStations() {
+      const container = document.getElementById("modal-stations-list");
+      container.innerHTML = "";
+      
+      const filtered = getFilteredAndSortedStations(state.modalQuery, state.modalSort);
+      
+      const countInfo = document.getElementById("modal-station-count-info");
+      if (countInfo) {
+        if (state.modalQuery) {
+          countInfo.textContent = `Tìm thấy ${filtered.length} / ${state.stations.length} trạm khớp từ khóa`;
+        } else {
+          countInfo.textContent = `Hiển thị 707 trạm (gõ vài ký tự để lọc nhanh)`;
+        }
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="py-10 text-center text-outline p-4">
+            <span class="material-symbols-outlined text-4xl mb-1 text-outline">search_off</span>
+            <p class="text-sm font-bold text-on-surface">Không tìm thấy trạm nào</p>
+            <p class="text-xs mt-0.5">Thử gõ không dấu (ví dụ: nam hai, tay tien, 0300...)</p>
+          </div>`;
+        return;
+      }
+
+      filtered.forEach(s => {
+        const b = document.createElement("button");
+        const isCurrent = state.currentStation && state.currentStation.station_id === s.station_id;
+        const rate = s.installed_rate || 0;
+        const rateColor = rate >= 65 ? "text-tertiary" : (rate >= 40 ? "text-secondary-container" : "text-error");
+
+        b.className = `w-full text-left p-3.5 rounded-2xl border flex items-center justify-between transition-all active:scale-[0.98] cursor-pointer ${isCurrent ? 'bg-primary/10 border-primary text-primary font-bold' : 'hover:bg-surface-container-low border-outline-variant/50'}`;
+        b.onclick = () => {
+          state.currentStation = s;
+          state.page = 1;
+          addRecentStation(s);
+          renderCurrentStationHeader();
+          closeStationModal();
+          setSearchScope("current");
+        };
+        b.innerHTML = `
+          <div class="space-y-1 min-w-0 pr-2">
+            <p class="text-sm sm:text-base font-bold ${isCurrent ? 'text-primary' : 'text-on-surface'} truncate">${s.station_name}</p>
+            <p class="text-xs text-outline font-mono">${s.station_id} · Chưa cài: <strong class="text-secondary-container font-bold">${s.uninstalled_count}</strong></p>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="text-sm sm:text-base font-extrabold ${rateColor} num">${rate}%</span>
+            ${isCurrent ? '<p class="text-[10px] text-primary font-bold">✓ Đang xem</p>' : ''}
+          </div>`;
+        container.appendChild(b);
+      });
+    }
+
+    function setSearchScope(scope) {
+      state.searchScope = scope;
+      state.page = 1;
+      const btnCurrent = document.getElementById("btn-scope-current");
+      const btnAll = document.getElementById("btn-scope-all");
+      const scopeHint = document.getElementById("search-scope-hint");
+      const inputSearch = document.getElementById("input-search");
+
+      if (scope === "all") {
+        if (btnCurrent) {
+          btnCurrent.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-on-surface-variant hover:text-primary transition-all cursor-pointer";
+        }
+        if (btnAll) {
+          btnAll.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-primary text-on-primary shadow-xs transition-all cursor-pointer";
+        }
+        if (scopeHint) scopeHint.textContent = "Đang tìm kiếm trong toàn bộ 707 trạm";
+        if (inputSearch) inputSearch.placeholder = "Tìm toàn bộ 707 trạm (nhập tên, SĐT, mã KH PA09..., công tơ, cột)...";
+      } else {
+        if (btnCurrent) {
+          btnCurrent.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-primary text-on-primary shadow-xs transition-all cursor-pointer";
+        }
+        if (btnAll) {
+          btnAll.className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-on-surface-variant hover:text-primary transition-all cursor-pointer";
+        }
+        if (scopeHint) {
+          const stName = state.currentStation ? state.currentStation.station_name : "trạm được chọn";
+          scopeHint.textContent = `Đang tìm trong ${stName}`;
+        }
+        if (inputSearch) inputSearch.placeholder = "Tìm tên chủ hộ, mã KH (PA09...), SĐT, số cột, công tơ...";
+      }
+
+      fetchCustomers();
+    }
+
+    function switchToStation(stationId) {
+      const found = state.stations.find(s => s.station_id === stationId);
+      if (found) {
+        state.currentStation = found;
+        addRecentStation(found);
+        setSearchScope("current");
+        renderCurrentStationHeader();
+        showToast(`Đã mở trạm: ${found.station_name}`, "info");
+      } else {
+        state.currentStation = { station_id: stationId, station_name: stationId };
+        addRecentStation(state.currentStation);
+        setSearchScope("current");
+        renderCurrentStationHeader();
+      }
+    }
+
+    window.setSearchScope = setSearchScope;
+    window.switchToStation = switchToStation;
+    window.openStationModal = openStationModal;
+    window.closeStationModal = closeStationModal;
+
+    // Initial Event Binding
+    const initApp = () => {
+      try {
+        for (const key of ["cskh_officers_custom", "cskh_auth_token", "cskh_officer_info"]) localStorage.removeItem(key);
+      } catch { /* Storage may be disabled */ }
+      updateNavBadge();
+
+      // Station Modal Triggers
+      const btnSelStation = document.getElementById("btn-select-station");
+      if (btnSelStation) btnSelStation.onclick = openStationModal;
+
+      const curNameHeader = document.getElementById("current-station-name");
+      if (curNameHeader) curNameHeader.onclick = openStationModal;
+
+      const quickCard = document.getElementById("btn-quick-station-card");
+      if (quickCard) quickCard.onclick = openStationModal;
+
+      const btnCloseModal = document.getElementById("btn-close-station-modal");
+      if (btnCloseModal) btnCloseModal.onclick = closeStationModal;
+
+      const stationModal = document.getElementById("station-picker-modal");
+      if (stationModal) {
+        stationModal.onclick = (e) => {
+          if (e.target === stationModal) closeStationModal();
+        };
+      }
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeStationModal();
+      });
+
+      // Navigation Items (Mobile)
+      document.querySelectorAll(".nav-item").forEach(btn => {
+        btn.onclick = () => switchNav(btn.getAttribute("data-nav"));
+      });
+
+      // Navigation Items (Desktop)
+      document.querySelectorAll(".desktop-nav-item").forEach(btn => {
+        btn.onclick = () => switchNav(btn.getAttribute("data-desktop-nav"));
+      });
+
+      // Status Tabs (Chưa cài / Đã cài / Tất cả)
+      document.querySelectorAll(".tab-status").forEach(btn => {
+        btn.onclick = () => {
+          state.filterStatus = btn.getAttribute("data-status");
+          document.querySelectorAll(".tab-status").forEach(b => {
+            const active = b === btn;
+            b.className = active
+              ? "tab-status flex-1 h-11 py-2 px-2 rounded-xl bg-primary-container text-on-primary font-bold text-sm sm:text-base shadow-sm flex items-center justify-center space-x-1.5 transition-all cursor-pointer"
+              : "tab-status flex-1 h-11 py-2 px-2 rounded-xl text-on-surface-variant font-semibold text-sm sm:text-base hover:text-primary transition-all flex items-center justify-center space-x-1.5 cursor-pointer";
+          });
+          state.page = 1;
+          fetchCustomers();
+        };
+      });
+
+      // Smart Grouping Switch Toggle
+      const toggleGroup = document.getElementById("toggle-group-phone");
+      toggleGroup.onchange = (e) => {
+        state.groupByPhone = e.target.checked;
+        const badge = document.getElementById("badge-toggle-status");
+        badge.textContent = state.groupByPhone ? "BẬT" : "TẮT";
+        badge.className = state.groupByPhone
+          ? "bg-primary text-on-primary text-xs font-bold px-2 py-0.5 rounded-full"
+          : "bg-outline text-white text-xs font-bold px-2 py-0.5 rounded-full";
+        fetchCustomers();
+      };
+
+      // Search debounce
+      let searchTimeout;
+      const inputSearch = document.getElementById("input-search");
+      inputSearch.oninput = (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          state.searchQuery = e.target.value.trim();
+          document.getElementById("btn-clear-search").classList.toggle("hidden", !state.searchQuery);
+          state.page = 1;
+          fetchCustomers();
+        }, 300);
+      };
+
+      document.getElementById("btn-clear-search").onclick = () => {
+        inputSearch.value = "";
+        state.searchQuery = "";
+        document.getElementById("btn-clear-search").classList.add("hidden");
+        state.page = 1;
+        fetchCustomers();
+      };
+
+      // Sub-filter chips (Cuộc gọi: Chưa gọi / Đã gọi / Tất cả)
+      const chips = [
+        { id: "chip-filter-uncontacted", val: "uncontacted", badgeId: "badge-chip-uncontacted" },
+        { id: "chip-filter-contacted", val: "contacted", badgeId: "badge-chip-contacted" },
+        { id: "chip-filter-all", val: "all", badgeId: "badge-chip-all" },
+      ];
+      chips.forEach(c => {
+        const el = document.getElementById(c.id);
+        if (!el) return;
+        el.onclick = () => {
+          state.subFilter = c.val;
+          state.page = 1;
+          chips.forEach(other => {
+            const isCur = other.id === c.id;
+            const otherEl = document.getElementById(other.id);
+            const otherBadge = document.getElementById(other.badgeId);
+            if (otherEl) {
+              otherEl.className = isCur
+                ? "sub-chip h-8.5 px-3 rounded-full bg-primary text-on-primary border border-primary text-xs sm:text-sm font-semibold flex items-center space-x-1 shadow-xs cursor-pointer transition-all"
+                : "sub-chip h-8.5 px-3 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant text-xs sm:text-sm font-medium flex items-center space-x-1 hover:bg-surface-container-low cursor-pointer transition-all";
+            }
+            if (otherBadge) {
+              otherBadge.className = isCur
+                ? "ml-1 px-1.5 py-0.2 rounded-full text-xs font-bold bg-white/20 text-white"
+                : "ml-1 px-1.5 py-0.2 rounded-full text-xs font-bold bg-surface-container text-outline";
+            }
+          });
+          fetchCustomers();
+        };
+      });
+
+      // Sync button
+      document.getElementById("btn-sync").onclick = async () => {
+        const syncBtn = document.getElementById("btn-sync");
+        const icon = syncBtn.querySelector(".material-symbols-outlined");
+        if (icon) icon.classList.add("animate-spin");
+        try {
+          if (state.stationDataCache) state.stationDataCache.clear();
+          try { await fetch("/api/sync"); } catch {}
+          await fetchOverview();
+          await fetchStations();
+          await fetchCustomers();
+          showToast("Đã làm mới dữ liệu mới nhất", "success");
+        } catch (e) {
+          console.error("Lỗi đồng bộ", e);
+        } finally {
+          setTimeout(() => {
+            if (icon) icon.classList.remove("animate-spin");
+          }, 400);
+        }
+      };
+
+      // Floating Back-to-Top Button Listener
+      window.addEventListener("scroll", () => {
+        const btn = document.getElementById("btn-back-to-top");
+        if (!btn) return;
+        if (window.scrollY > 280) {
+          btn.classList.remove("opacity-0", "pointer-events-none", "translate-y-3");
+          btn.classList.add("opacity-100", "translate-y-0");
+        } else {
+          btn.classList.add("opacity-0", "pointer-events-none", "translate-y-3");
+          btn.classList.remove("opacity-100", "translate-y-0");
+        }
+      }, { passive: true });
+
+      // Modal station live search & clear
+      const inputModalSearch = document.getElementById("input-modal-station-search");
+      if (inputModalSearch) {
+        inputModalSearch.oninput = (e) => {
+          state.modalQuery = e.target.value;
+          document.getElementById("btn-clear-modal-station").classList.toggle("hidden", !state.modalQuery);
+          renderModalStations();
+        };
+      }
+
+      const btnClearModal = document.getElementById("btn-clear-modal-station");
+      if (btnClearModal) {
+        btnClearModal.onclick = () => {
+          inputModalSearch.value = "";
+          state.modalQuery = "";
+          btnClearModal.classList.add("hidden");
+          renderModalStations();
+          inputModalSearch.focus();
+        };
+      }
+
+      // Modal station sort buttons
+      document.querySelectorAll(".modal-sort-btn").forEach(btn => {
+        btn.onclick = () => {
+          state.modalSort = btn.getAttribute("data-modal-sort");
+          document.querySelectorAll(".modal-sort-btn").forEach(b => {
+            const isCur = b === btn;
+            b.className = isCur 
+              ? "modal-sort-btn px-2.5 py-1 rounded-lg border border-primary bg-primary text-on-primary font-bold shadow-xs transition-all cursor-pointer"
+              : "modal-sort-btn px-2.5 py-1 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface font-medium hover:bg-surface-container-low transition-all cursor-pointer";
+          });
+          renderModalStations();
+        };
+      });
+
+      // View Stations tab search & clear
+      const inputStationSearch = document.getElementById("input-station-search");
+      if (inputStationSearch) {
+        inputStationSearch.oninput = (e) => {
+          state.stationQuery = e.target.value;
+          document.getElementById("btn-clear-station-search").classList.toggle("hidden", !state.stationQuery);
+          renderStationsView();
+        };
+      }
+
+      const btnClearStation = document.getElementById("btn-clear-station-search");
+      if (btnClearStation) {
+        btnClearStation.onclick = () => {
+          inputStationSearch.value = "";
+          state.stationQuery = "";
+          btnClearStation.classList.add("hidden");
+          renderStationsView();
+          inputStationSearch.focus();
+        };
+      }
+
+      // View Stations sort buttons
+      document.querySelectorAll(".station-sort-btn").forEach(btn => {
+        btn.onclick = () => {
+          state.stationSort = btn.getAttribute("data-sort-station");
+          document.querySelectorAll(".station-sort-btn").forEach(b => {
+            const isCur = b === btn;
+            b.className = isCur
+              ? "station-sort-btn px-3 py-1.5 rounded-xl border border-primary bg-primary text-on-primary font-bold shadow-xs transition-all cursor-pointer"
+              : "station-sort-btn px-3 py-1.5 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-medium hover:bg-surface-container-low transition-all cursor-pointer";
+          });
+          renderStationsView();
+        };
+      });
+
+      // Clear personal contacted logs
+      document.getElementById("btn-clear-call-logs").onclick = () => {
+        if (!state.currentUser) return;
+        if (confirm("Sếp có chắc chắn muốn xóa toàn bộ danh sách đã liên hệ của tài khoản này không?")) {
+          state.myContactedPhones.clear();
+          saveOfficerContacted();
+          renderCallLogsView();
+          fetchCustomers();
+          showToast("Đã xóa danh sách đã liên hệ của bạn", "info");
+        }
+      };
+
+      // Pagination events (Chuyển trang & Đổi số lượng hiển thị)
+      document.getElementById("btn-prev-page").onclick = () => {
+        if (state.page > 1) {
+          state.page--;
+          fetchCustomers().then(() => {
+            window.scrollTo({ top: 300, behavior: 'smooth' });
+          });
+        }
+      };
+
+      document.getElementById("btn-next-page").onclick = () => {
+        if (state.page < state.totalPages) {
+          state.page++;
+          fetchCustomers().then(() => {
+            window.scrollTo({ top: 300, behavior: 'smooth' });
+          });
+        }
+      };
+
+      document.getElementById("select-page-size").onchange = (e) => {
+        state.pageSize = parseInt(e.target.value, 10);
+        state.page = 1;
+        fetchCustomers();
+      };
+
+      // Initialize officer avatar UI & personal contacted set
+      updateUserAvatarUI();
+      loadOfficerContacted();
+
+      // Load initial data
+      fetchOverview();
+      fetchStations().then(() => fetchCustomers());
+      refreshSession().then(ok => { if (ok) fetchCustomers(); });
+
+      // Register PWA Service Worker & auto-clear old caches
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").then(reg => {
+          reg.update();
+        }).catch(e => console.log("SW registration failed", e));
+        if ("caches" in window) {
+          caches.keys().then(keys => {
+            keys.forEach(k => {
+              if (k.startsWith("cskh-tram-cache")) caches.delete(k);
+            });
+          });
+        }
+      }
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initApp);
+    } else {
+      initApp();
+    }
+  </script>
+</body>
+</html>
