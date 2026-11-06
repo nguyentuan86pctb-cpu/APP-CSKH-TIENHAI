@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "users": [
+    {
+      "username": "admin",
+      "active": true,
+      "salt": "b24b078f602cc6ab9cd0024b6e755bab",
+      "password_hash": "3f054ba99556d11abe7bb1071627cf8942215c905b3c2c8b18b369f7b0d88283",
+      "iterations": 600000
+    },
+    {
+      "username": "dltienhai",
+      "active": true,
+      "salt": "e8ea6a34055e9c554ed917a9169fcb00",
+      "password_hash": "21a62883b83c0fa05862349419b808fb3dbd7f462331a9b452ff55b21a1e4b32",
+      "iterations": 600000
+    }
+  ]
+}

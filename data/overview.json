@@ -1,0 +1,13 @@
+{
+  "org_name": "Điện lực Tiền Hải (PA0903)",
+  "total_stations": 694,
+  "total_points": 85950,
+  "installed_count": 19059,
+  "uninstalled_count": 66891,
+  "installed_rate": 22.2,
+  "target_rate": 65.0,
+  "target_achieved": false,
+  "cms_sync_time": "06/11/2026 15:13",
+  "cmis_sync_time": "25/10/2026 23:23",
+  "exported_at": "06/11/2026 15:14:22"
+}

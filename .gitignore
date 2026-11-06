@@ -1,0 +1,6 @@
+.wrangler/
+node_modules/
+.env*
+.dev.vars*
+accounts*.json
+secrets*
